@@ -2,6 +2,8 @@ import React, { useState } from 'react'
 import { Link } from 'react-router-dom';
 import { useAuthStore } from '../store/authStore.js'
 import { Users, User, Key, Mail, Lock, Eye, EyeOff, Loader2 } from 'lucide-react'
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 
 const SignupPg = () => {
@@ -30,8 +32,8 @@ const SignupPg = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-
         const success = validateForm();
+        console.log(formData);
 
         if (success === true) {
             if(admin)adminsignup(formData)

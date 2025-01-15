@@ -2,8 +2,9 @@ import { create } from "zustand";
 import { axiosInstance } from "../lib/axios.js";
 import toast from "react-hot-toast";
 import { io } from "socket.io-client";
-
+import axios from "axios";
 // const BASE_URL = import.meta.env.MODE === "development" ? "http://localhost:5001" : "/";
+import { useNavigate } from "react-router-dom";
 
 export const useAuthStore = create((set, get) => ({
   authUser: null,
@@ -13,6 +14,7 @@ export const useAuthStore = create((set, get) => ({
   isCheckingAuth: true,
   onlineUsers: [],
   socket: null,
+  isAdmin: false,
 
   checkAuth: async () => {
     try {
@@ -29,28 +31,44 @@ export const useAuthStore = create((set, get) => ({
   },
 
   signup: async (data) => {
-    set({ isSigningUp: true });
-    try {
-      const res = await axiosInstance.post("/auth/signup", data);
-      set({ authUser: res.data });
-      toast.success("Account created successfully");
-      get().connectSocket();
-    } catch (error) {
-      toast.error(error.response.data.message);
-    } finally {
-      set({ isSigningUp: false });
-    }
-  },
+		set({ isSigningUp: true });
+		set({ isAdmin: false });
+    // const navigate = useNavigate(); // Initialize navigate
+    
+		try {
+			console.log("data:", data);
+			const res = await axiosInstance.post("/auth/signup", data);
+			// const res = await axios.post("/auth/signup", data);
+			console.log("this is res:", res);
+
+			set({ authUser: res.data });
+			toast.success("Account created successfully");
+			get().connectSocket();
+			//  navigate("/"); // This will navigate to the homepage
+
+			return res;
+		} catch (error) {
+			console.log("error in signup:", error);
+			// toast.error(error.response.data.message);
+		} finally {
+			set({ isSigningUp: false });
+		}
+	},
 
   login: async (data) => {
     set({ isLoggingIn: true });
+    set({ isAdmin: false });
+    console.log("data:", data);
     try {
       const res = await axiosInstance.post("/auth/login", data);
+      console.log("data:", res);
+
       set({ authUser: res.data });
       toast.success("Logged in successfully");
 
       get().connectSocket();
     } catch (error) {
+      console.log("error in login:", error);
       toast.error(error.response.data.message);
     } finally {
       set({ isLoggingIn: false });
@@ -59,10 +77,16 @@ export const useAuthStore = create((set, get) => ({
 
   adminsignup: async (data) => {
     set({ isSigningUp: true });
+    
+    console.log("hdfj")
+
     try {
+      console.log("hdfj")
       const res = await axiosInstance.post("/auth/adminsignup", data);
+      console.log("hdfj")
       set({ authUser: res.data });
       toast.success("Account created successfully");
+      set({ isAdmin: true });
       get().connectSocket();
     } catch (error) {
       toast.error(error.response.data.message);
@@ -77,7 +101,7 @@ export const useAuthStore = create((set, get) => ({
       const res = await axiosInstance.post("/auth/adminlogin", data);
       set({ authUser: res.data });
       toast.success("Logged in successfully");
-
+      set({ isAdmin: true });
       get().connectSocket();
     } catch (error) {
       toast.error(error.response.data.message);
@@ -113,6 +137,7 @@ export const useAuthStore = create((set, get) => ({
 
   connectSocket: () => {
     const { authUser } = get();
+    console.log(authUser);
     if (!authUser || get().socket?.connected) return;
 
     const socket = io("http://localhost:5001", {

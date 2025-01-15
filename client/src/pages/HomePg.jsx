@@ -1,57 +1,92 @@
-import React from 'react';
+import React from "react";
+import { motion } from "framer-motion";
 
 const HomePg = () => {
-    const features = [
-        {
-            title: "Shared Resource Library",
-            description: "Students can access and upload materials, creating a collaborative academic vault. All materials are stored in categories for easy navigation and sharing.",
-        },
-        {
-            title: "Q&A Manager",
-            description: "Ask doubts, upload solutions, and organize queries by categories. Admins can manage categories, and students can request new ones.",
-        },
-        {
-            title: "Important Emails and Websites Library",
-            description: "Get quick access to all important email IDs and websites in one organized list. Stay connected and informed at all times.",
-        },
-        {
-            title: "Lost & Found Manager",
-            description: "Upload and find lost items by categories such as CEP, LT, and canteen. Found items are auto-tagged and removed when resolved.",
-        },
-    ];
+	const features = [
+		{
+			title: "Shared Resource Library",
+			description:
+				"Access and upload academic materials collaboratively. Navigate categories effortlessly to share knowledge.",
+		},
+		{
+			title: "Q&A Manager",
+			description:
+				"Ask questions, share solutions, and organize queries. Empower admins to manage categories efficiently.",
+		},
+		{
+			title: "Important Emails & Websites",
+			description:
+				"Keep all essential contacts and websites in one curated, easily accessible list.",
+		},
+		{
+			title: "Lost & Found Manager",
+			description:
+				"Report and find lost items by category. Items are auto-tagged and updated dynamically.",
+		},
+	];
 
-    return (
-        <div className="m-6 flex flex-col items-center">
-            <div className="relative bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 text-primary-content text-center py-12 rounded-lg shadow-lg mb-12 w-full max-w-4xl">
-                <h1 className="text-6xl font-bold text-blue-300 tracking-wide">
-                    aDApt: Collaborative Platform for Students
-                </h1>
-                <p className="text-lg mt-4 text-gray-400 italic">
-                    Where students connect, share, and grow together.
-                </p>
-                <div
-                    className="absolute inset-0 bg-[url('/path/to/code-background-image.jpg')] opacity-10 pointer-events-none"
-                    style={{
-                        backgroundSize: 'cover',
-                        backgroundRepeat: 'no-repeat',
-                        backgroundPosition: 'center',
-                    }}
-                ></div>
-            </div>
+	return (
+		<div className="min-h-screen bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 text-gray-200">
+			{/* Hero Section */}
+			<section className="relative flex flex-col items-center justify-center py-20 text-center">
+				<motion.h1
+					className="text-6xl font-extrabold text-blue-300 tracking-wide"
+					initial={{ opacity: 0, y: -50 }}
+					animate={{ opacity: 1, y: 0 }}
+					transition={{ duration: 0.8 }}
+				>
+					aDApt: Collaborative Platform for Students
+				</motion.h1>
+				<motion.p
+					className="text-xl mt-4 text-gray-400 italic"
+					initial={{ opacity: 0, y: 50 }}
+					animate={{ opacity: 1, y: 0 }}
+					transition={{ duration: 0.8, delay: 0.2 }}
+				>
+					Where students connect, share, and grow together.
+				</motion.p>
+				<motion.div
+					className="absolute inset-0 bg-[url('/path/to/hero-image.jpg')] opacity-10 pointer-events-none"
+					style={{
+						backgroundSize: "cover",
+						backgroundRepeat: "no-repeat",
+						backgroundPosition: "center",
+					}}
+				></motion.div>
+			</section>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 justify-center max-w-4xl">
-                {features.map((feature, index) => (
-                    <div
-                        key={index}
-                        className="card bg-blue-100 text-gray-800 shadow-md p-6 rounded-lg w-full max-w-sm transform transition-transform duration-300 hover:scale-105 hover:bg-gray-200"
-                    >
-                        <h2 className="text-3xl font-bold mb-4">{feature.title}</h2>
-                        <p className="text-base leading-relaxed">{feature.description}</p>
-                    </div>
-                ))}
-            </div>
-        </div>
-    );
+			{/* Features Section */}
+			<div className="container mx-auto py-16 px-6">
+				<div
+					className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-8"
+					style={{
+						gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))",
+					}}
+				>
+					{features.map((feature, index) => (
+						<motion.div
+							key={index}
+							className="p-6 bg-gradient-to-br from-blue-500 to-blue-400 text-white rounded-lg shadow-lg transform transition-transform duration-300 hover:scale-105"
+							initial={{ opacity: 0, y: 20 }}
+							animate={{ opacity: 1, y: 0 }}
+							transition={{ duration: 0.6, delay: index * 0.2 }}
+							
+						>
+							<h2 className="text-2xl font-bold mb-3">{feature.title}</h2>
+							<p className="text-base leading-relaxed">{feature.description}</p>
+						</motion.div>
+					))}
+				</div>
+			</div>
+
+			{/* Footer */}
+			<footer className="py-6 bg-gray-800 text-center">
+				<p className="text-sm text-gray-400">
+					© 2025 aDApt. All rights reserved. | Designed for collaboration.
+				</p>
+			</footer>
+		</div>
+	);
 };
 
 export default HomePg;

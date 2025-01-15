@@ -1,11 +1,12 @@
 import React, { useState, useRef } from 'react';
 import { MessageCircleQuestion, Image, X, ClipboardList } from 'lucide-react';
 import { useQnAStore } from '../store/QnAStore.js';
-import toast from 'react-hot-toast';
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import imageCompression from 'browser-image-compression'; // Import image compression library
 
 const QnAForm = () => {
-    const { sendQuestion } = useQnAStore();
+    const { sendQuestion, categories } = useQnAStore();
     const [text, setText] = useState('');
     const [file, setFile] = useState(null);
     const fileInputRef = useRef(null);
@@ -40,20 +41,26 @@ const QnAForm = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-    
+        // console.log("hello")
         if (!cat.trim() || (!text.trim() && !file)) {
             toast.error('Please provide a category and either a question or a file');
             return;
         }
-    
+        //  console.log("hello");
+        //validate category 
+        // if (!categories.includes(cat.trim())) {
+        //     toast.error('Please provide a valid category');
+        //     return;
+        // }
+        // console.log("hello");
         try {
             const formData = {
                 text: text.trim(),
-                file: file ? await toBase64(file) : null, // Convert file to Base64
+                file, // Convert file to Base64
             };
     
             await sendQuestion(cat.trim(), formData);
-    
+            //  console.log("hello");
             // Clear form
             setText('');
             setCat('');

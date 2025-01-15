@@ -17,7 +17,8 @@ import EmailForm from './components/EmailForm.jsx'
 import SharedlibForm from './components/SharedlibForm.jsx'
 
 const App = () => {
-  const {authUser, checkAuth, isCheckingAuth} = useAuthStore()
+  const { authUser, checkAuth, isCheckingAuth } = useAuthStore();
+  
   useEffect(() => {
     checkAuth()
   }, [checkAuth])

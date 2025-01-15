@@ -64,7 +64,8 @@ const AnswerInput = ({ questionId, category }) => {
             const formData = {
                 questionId,
                 text: text.trim(),
-                file: file ? await toBase64(file) : null, // Convert file to Base64
+                file
+                // file: file ? await toBase64(file) : null, // Convert file to Base64
             };
 
             await sendAnswer(category, formData);
