@@ -92,18 +92,20 @@ export const useQnAStore = create((set, get) => ({
 
 	// Fetch answers for a specific question
 	getAnswers: async (category, questionId) => {
+		console.log("jaiiii");
+		console.log(category);
+		console.log(questionId);
 		set({ isLoading: true });
+
 		try {
-			const res = await axiosInstance.post(
-				`/qna/categories/${category}/answers/get`,
-				{
-					questionId,
-				}
+			const res = await axiosInstance.get(
+				`/qna/categories/${questionId}/answers/get`
 			);
-			set({ answers: res.data });
+			set({ answers: res.data.answers });
 			console.log("data");
 			console.log(res.data);
 		} catch (error) {
+			console.log("jaiiii");
 			toast.error("Failed to fetch answers.");
 		} finally {
 			set({ isLoading: false });
@@ -115,15 +117,15 @@ export const useQnAStore = create((set, get) => ({
 		// console.log("hello ji");
 		try {
 			// console.log("IT's a qdata");
-			// console.log(category);
-			// console.log(questionData);
+			console.log(category);
+			console.log(questionData);
 			// console.log(questionData.text)
 			// console.log(questionData.file)
 
 			const formData = new FormData();
 			formData.append("text", questionData.text);
 			formData.append("file", questionData.file);
-
+			formData.append
 			const res = await axiosInstance.post(
 				`/qna/categories/${category}/questions`,
 				formData,
@@ -145,23 +147,26 @@ export const useQnAStore = create((set, get) => ({
 
 	// Send a new answer
 	sendAnswer: async (category, answerData) => {
-
+		console.log("jiii" ,answerData);
 		try {
 			const formData = new FormData();
 			formData.append("text", answerData.text);
 			formData.append("file", answerData.file);
 			formData.append("questionId", answerData.questionId);
 			formData.append("senderId", answerData.senderId);
+			console.log("jj");
 
+			// console.log(formData);
 			const res = await axiosInstance.post(
 				`/qna/categories/${category}/answers`,
-				answerData,
+				formData,
 				{
 					headers: {
 						"Content-Type": "multipart/form-data",
 					},
 				}
 			);
+			console.log(res);
 			set((state) => ({
 				answers: [...state.answers, res.data],
 			}));

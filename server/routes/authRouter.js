@@ -4,7 +4,15 @@ const router = express.Router();
 
 
 // Import controllers for each route
-const { signup, login, adminSignup, adminLogin } = require('../controllers/authController');
+const {
+	signup,
+	login,
+	adminSignup,
+	adminLogin,
+	checkAuth,
+} = require("../controllers/authController");
+
+router.post('/check', checkAuth);
 
 // Define routes
 router.post("/signup", signup);

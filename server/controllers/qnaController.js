@@ -77,7 +77,6 @@ const getQuestion = async (req, res) => {
 	return res.status(200).json({ questions });
 };
 
-const getAnswer = async (req, res) => {};
 const addQuestion = async (req, res) => {
 	const { category } = req.params;
 	// console.log(req);
@@ -121,7 +120,90 @@ const addQuestion = async (req, res) => {
 		return res.status(500).json({ message: "Server error. Please try again." });
 	}
 };
-const addAnswer = async (req, res) => {};
+
+const getAnswer = async (req, res) => {
+	console.log("I'm called baby ");
+	// const { category } = req.params;
+	const { questionId } = req.params;
+	// const { questionId } = req.body;
+	// console.log(req);
+	// console.log(category);
+	console.log(questionId);
+
+	if (!questionId) return res.status(400).json({ message: "questionId is must" });
+
+	console.log("1");
+	try {
+		const existingQuestion = await Question.findOne({
+			_id: questionId,
+		});
+		if (!existingQuestion) {
+			return res.status(404).json({ message: "Question not found" });
+		}
+
+		const answers = existingQuestion.comments;
+		// console.log("answers:", answers);
+		return res.status(200).json({ answers });
+
+	}
+	catch (error) {
+		console.error("Error fetching answers:", error);
+		return res.status(500).json({ message: "Server error. Please try again." });
+	}
+
+		
+		
+};
+const addAnswer = async (req, res) => {
+	const { category } = req.params;
+	const { text: text, senderId: senderId, questionId: questionId } = req.body;
+	const filePath = req.file;
+ 
+	console.log("body",req.body);
+	console.log("file", req.file);
+	console.log("text :",text);
+	console.log("senderId :", senderId);
+	console.log("questionId :", questionId);
+	
+	
+
+	if (!text) return res.status(400).json({ message: "text is must" });
+
+	try {
+		console.log("text", text);
+		let result=null; 
+		if(req.file)
+		result= await cloudinary.v2.uploader.upload(req.file.path);
+		console.log("text", text);
+		// const existingCategory = await Category.findOne({ name: category });
+		// if (!existingCategory) {
+		// 	return res.status(404).json({ message: "Category not found" });
+		// }
+		
+		const existingQuestion = await Question.findOne({ _id: questionId });
+		if (!existingQuestion) {
+			return res.status(404).json({ message: "Question not found" });
+		}
+console.log("ajd");
+		 const newAnswer = {
+				text, 
+				senderId,
+				file: result ? result.url : null,
+				questionId,
+		};
+		
+		existingQuestion.comments.push(newAnswer);
+		await existingQuestion.save();
+		console.log("ajd", newAnswer);
+		
+		return res
+			.status(201)
+			.json({ message: "Answer added successfully", newAnswer });
+	} catch (error) {
+		console.error("Error adding answer:", error);
+		return res.status(500).json({ message: "Server error. Please try again." });
+	}
+};
 
 module.exports = {
 	getCategory,

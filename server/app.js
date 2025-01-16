@@ -62,6 +62,19 @@ io.on("connection", (socket) => {
 	console.log("User connected:", socket.id);
 
 	// Now you can handle user-specific logic
+	socket.on("message", (data) => {
+		const { message, room } = data;
+		console.log(data);
+		// io.emit("receive-message", data);
+		// socket.broadcast.emit("receive-message", data);
+		io.to(room).emit("receive-message", message);
+	});
+	
+	 socket.on("join-room", (room) => {
+			socket.join(room);
+			console.log(`User ${socket.id} joined room ${room}`);
+	 });
+	
 	socket.on("disconnect", () => {
 		console.log("User disconnected:", socket.id);
 	});

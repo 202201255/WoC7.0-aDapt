@@ -6,6 +6,7 @@ import questionMarkImage from "../assets/question_mark.jpg";
 import AnswerInput from "../components/AnswerInput";
 import { useAuthStore } from "../store/authStore";
 
+
 const QnAPg = () => {
   const {
     getCategories,
@@ -35,6 +36,9 @@ const QnAPg = () => {
   const [currentCategory, setCurrentCategory] = useState(null);
   const [what, setWhat] = useState("category"); // Control the visible section
 
+	
+	
+	
   useEffect(() => {
 
     const fetchCat = async () => {
@@ -48,7 +52,8 @@ const QnAPg = () => {
 
   // Connect socket when the component mounts and disconnect when unmounted
   useEffect(() => {
-    connectSocket();
+	  connectSocket();
+	  
     return () => dissconnectSocket();
   }, [connectSocket, dissconnectSocket]);
 
@@ -71,12 +76,18 @@ const QnAPg = () => {
     setWhat("qna"); // Switch to question display
   };
 
-  const handleQuestionClick = async (questionId, img, content) => {
+	const handleQuestionClick = async (questionId, img, content) => {
+		console.log("jai shree ram");
+		
+		console.log("before", answers);
     setSelectedQuestionId(questionId);
     setSelectedImg(img);
-    setSelectedText(content);
-    await getAnswers(currentCategory, questionId);
-    setWhat("chat"); // Switch to chat view
+		setSelectedText(content);
+		console.log(currentCategory.name, " ", questionId);
+    await getAnswers(currentCategory.name, questionId);
+		setWhat("chat"); // Switch to chat view
+		
+		console.log("after", answers);
   };
 
   const goBack = () => {

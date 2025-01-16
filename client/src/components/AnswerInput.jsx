@@ -3,6 +3,7 @@ import { Image, Send, X } from "lucide-react";
 import toast from "react-hot-toast";
 import imageCompression from "browser-image-compression"; // Import image compression library
 import { useQnAStore } from "../store/QnAStore";
+import { useAuthStore } from "../store/authStore";
 
 const AnswerInput = ({ questionId, category }) => {
     const [text, setText] = useState("");
@@ -10,7 +11,7 @@ const AnswerInput = ({ questionId, category }) => {
     const [filePreview, setFilePreview] = useState(null);
     const fileInputRef = useRef(null);
     const { sendAnswer, setQId } = useQnAStore();
-
+     const { authUser, socket,isAdmin } = useAuthStore();
     const handleFileChange = async (e) => {
         const uploadedFile = e.target.files[0];
         if (!uploadedFile) return;
@@ -44,29 +45,35 @@ const AnswerInput = ({ questionId, category }) => {
     };
 
     const handleSendAnswer = async (e) => {
+        console.log('ji helo');
         e.preventDefault(); // Stop the default form submission
 
         // Prevent submission if no text or file is provided
         if (!text.trim() && !file) {
+           
             toast.error("Please provide text or attach a file.");
             return;
         }
-
+        console.log("ji helo");
         // Prevent submission if no questionId is available
         if (!questionId) {
+            console.log("No question selected!");
             toast.error("No question selected!");
             return;
         }
+        // answers;
+        console.log("ji helo");
 
         setQId(questionId)
         console.log("I'm called")
         try {
             const formData = {
-                questionId,
-                text: text.trim(),
-                file
-                // file: file ? await toBase64(file) : null, // Convert file to Base64
-            };
+							questionId,
+							text: text.trim(),
+							file: file ? file : null,
+							senderId: authUser._id,
+							// file: file ? await toBase64(file) : null, // Convert file to Base64
+						};
 
             await sendAnswer(category, formData);
 

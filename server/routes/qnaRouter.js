@@ -38,11 +38,11 @@ router.post("/categories/add", addCategory);
 router.delete(`/categories/:category/remove`,removeCategory);
 
 router.get("/categories/:category/questions", getQuestion);
-router.get("/categories/:category/answers/get", getAnswer);
+router.get("/categories/:questionId/answers/get", getAnswer);
 
 router.post(
 	"/categories/:category/questions", upload.single("file"), addQuestion
 );
-router.post("/categories/:category/answers", addAnswer);
+router.post("/categories/:category/answers",upload.single("file"), addAnswer);
 
 module.exports = router;
