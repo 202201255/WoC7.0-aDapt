@@ -15,12 +15,13 @@ import QnAForm from "./components/QnAForm.jsx";
 import LnFForm from "./components/LnFForm.jsx";
 import EmailForm from "./components/EmailForm.jsx";
 import SharedlibForm from "./components/SharedlibForm.jsx";
-
+import { Toaster } from "react-hot-toast";
 const App = () => {
 	const { authUser, checkAuth, isCheckingAuth } = useAuthStore();
-
+	const token = localStorage.getItem("token");
 	useEffect(() => {
 		checkAuth();
+		
 	}, []);
 
 	console.log("authUser", authUser);
@@ -85,6 +86,7 @@ const App = () => {
 						element={authUser ? <SharedlibForm /> : <Navigate to="/" />}
 					/>
 				</Routes>
+				<Toaster />
 			</div>
 		</BrowserRouter>
 	);

@@ -3,8 +3,13 @@ import { MessageCircleQuestion, Image, X, ClipboardList, File } from 'lucide-rea
 import { useSharedLibStore } from '../store/sharedlibStore.js';
 import toast from 'react-hot-toast';
 import imageCompression from 'browser-image-compression';
+import { useLocation } from "react-router-dom";
 
 const SharedlibForm = () => {
+    const {files} = useSharedLibStore();
+     const location = useLocation();
+    const { currentCourse, hello } = location.state || {};
+    
     const { addFile, catId, csId } = useSharedLibStore();
     const [file, setFile] = useState(null);
     const [fileType, setFileType] = useState(''); // Track file type
@@ -64,19 +69,24 @@ const SharedlibForm = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-
+        console.log("jiiii", currentCourse);
+        console.log(hello);
         try {
 
-            const newFile = await toBase64(file); 
+            // const newFile = await toBase64(file); 
+            const newFile = file;
             
             const formData = {
                 name: name.trim(),
-                file: file? await toBase64(file):null, // Convert file to Base64
+                // file: file? await toBase64(file):null, // Convert file to Base64
+                file: file ? file : null,
                 fileType,
             };
-
+            console.log("jiiii", formData);
+            console.log(catId, " ", csId);
             await addFile(catId, csId, formData);
 
+            console.log("jijijiji",files);
             setFile(null);
             setFileType('');
             setName('');

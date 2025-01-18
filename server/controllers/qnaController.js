@@ -159,11 +159,11 @@ const addAnswer = async (req, res) => {
 	const { text: text, senderId: senderId, questionId: questionId } = req.body;
 	const filePath = req.file;
  
-	console.log("body",req.body);
-	console.log("file", req.file);
-	console.log("text :",text);
-	console.log("senderId :", senderId);
-	console.log("questionId :", questionId);
+	// console.log("body",req.body);
+	// console.log("file", req.file);
+	// console.log("text :",text);
+	// console.log("senderId :", senderId);
+	// console.log("questionId :", questionId);
 	
 	
 

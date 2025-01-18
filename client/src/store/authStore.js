@@ -5,6 +5,7 @@ import { io } from "socket.io-client";
 import axios from "axios";
 // const BASE_URL = import.meta.env.MODE === "development" ? "http://localhost:5001" : "/";
 import { useNavigate } from "react-router-dom";
+import { cloneElement } from "react";
 
 export const useAuthStore = create((set, get) => ({
 	authUser: null,
@@ -17,6 +18,8 @@ export const useAuthStore = create((set, get) => ({
 	isAdmin: false,
 
 	checkAuth: async () => {
+		// console.log('ji hello');	
+		
 		try {
 			if (localStorage.getItem("token")) {
 				const res = await axiosInstance.post("/auth/check", {
@@ -25,6 +28,10 @@ export const useAuthStore = create((set, get) => ({
 
 				set({ authUser: res.data });
 				get().connectSocket();
+			}
+			else {
+				set({ authUser: null });
+				get().disconnectSocket();
 			}
 		} catch (error) {
 			console.log("Error in checkAuth:", error);

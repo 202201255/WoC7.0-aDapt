@@ -45,7 +45,7 @@ const AnswerInput = ({ questionId, category }) => {
     };
 
     const handleSendAnswer = async (e) => {
-        console.log('ji helo');
+        // console.log('ji helo');
         e.preventDefault(); // Stop the default form submission
 
         // Prevent submission if no text or file is provided
@@ -54,18 +54,18 @@ const AnswerInput = ({ questionId, category }) => {
             toast.error("Please provide text or attach a file.");
             return;
         }
-        console.log("ji helo");
+        // console.log("ji helo");
         // Prevent submission if no questionId is available
         if (!questionId) {
-            console.log("No question selected!");
+            // console.log("No question selected!");
             toast.error("No question selected!");
             return;
         }
         // answers;
-        console.log("ji helo");
+        // console.log("ji helo");
 
         setQId(questionId)
-        console.log("I'm called")
+        // console.log("I'm called")
         try {
             const formData = {
 							questionId,

@@ -3,7 +3,7 @@ const path = require("path");
 const mongoose = require("mongoose");
 const authRouter = require("./routes/authRouter");
 const qnaRouter = require("./routes/qnaRouter");
-
+const libRouter = require("./routes/libRouter");
 const app = express();
 
 const PORT = 5001;
@@ -58,16 +58,18 @@ app.use("/api/auth", authRouter);
 
 app.use("/api/qna", qnaRouter);
 
+app.use("/api/sharedlib",libRouter);
+
 io.on("connection", (socket) => {
 	console.log("User connected:", socket.id);
 
 	// Now you can handle user-specific logic
 	socket.on("message", (data) => {
-		const { message, room } = data;
-		console.log(data);
+		// const { message, room } = data;
+		console.log("this is socketData",data);
 		// io.emit("receive-message", data);
 		// socket.broadcast.emit("receive-message", data);
-		io.to(room).emit("receive-message", message);
+		// io.to(room).emit("receive-message", message);
 	});
 	
 	 socket.on("join-room", (room) => {

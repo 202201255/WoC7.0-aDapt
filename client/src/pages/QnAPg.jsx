@@ -69,7 +69,7 @@ const QnAPg = () => {
   };
 
 	const handleCategoryClick = async (category) => {
-	  console.log("hello ji	");
+	//   console.log("hello ji	");
     setCurrentCategory(category);
 		await getQuestions(category);
 		console.log("here is ", questions);

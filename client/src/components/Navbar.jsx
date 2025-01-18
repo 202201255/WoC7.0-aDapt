@@ -1,7 +1,30 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from "react-router-dom";
+import { useAuthStore } from "../store/authStore.js";
 
 const Navbar = () => {
+    const { authUser,checkAuth } = useAuthStore();
+    const navigate = useNavigate();
+    
+     const handleLogout = () => {
+				// console.log("Logout button clicked"); // Step 1: Verify the button is clicked
+
+				const token = localStorage.getItem("token");
+				// console.log("Current token:", token); // Step 2: Check if the token exists
+
+				if (token) {
+					// Step 3: Remove the token
+                    localStorage.removeItem("token");
+                    // set({ authUser: null });
+					console.log("Token removed from localStorage");
+                    checkAuth();
+					// Step 4: Redirect to login page
+					navigate("/login");
+					console.log("Navigating to /login");
+				} else {
+					console.log("No token found in localStorage");
+				}
+			};
     return (
         <div>
             <div className="navbar bg-primary text-primary-content my-3 relative z-50">
@@ -54,7 +77,9 @@ const Navbar = () => {
                         </li>
                     </ul>
                 </div>
+                
                 <div className="navbar-end">
+                    <button onClick={handleLogout} className="btn text-xl mx-4" >Logout</button>
                     <Link to="/signup" className="btn text-xl">Register</Link>
                 </div>
             </div>
