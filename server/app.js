@@ -1,9 +1,11 @@
 const express = require("express");
 const path = require("path");
+const fileUpload = require("express-fileupload");
 const mongoose = require("mongoose");
 const authRouter = require("./routes/authRouter");
 const qnaRouter = require("./routes/qnaRouter");
 const libRouter = require("./routes/libRouter");
+const emailRouter = require("./routes/emailRouter");
 const app = express();
 
 const PORT = 5001;
@@ -35,6 +37,8 @@ const io = new Server(server, {
 	},
 });
 
+// app.use(fileUpload());
+
 // Configure CORS
 app.use(
 	cors({
@@ -59,6 +63,8 @@ app.use("/api/auth", authRouter);
 app.use("/api/qna", qnaRouter);
 
 app.use("/api/sharedlib",libRouter);
+
+app.use("/api/mail", emailRouter);
 
 io.on("connection", (socket) => {
 	console.log("User connected:", socket.id);

@@ -32,6 +32,7 @@ const {
 	removeCourse,
 	getFiles,
 	addFile,
+	removeFile,
 } = require("../controllers/libController");
 
 // Define routes
@@ -57,5 +58,10 @@ router.post(
 	"/course_codes/:categoryId/courses/:courseId/files/add",
 	upload.single("file"),
 	addFile
+);
+
+router.post(
+	"/course_codes/:categoryId/courses/:courseId/files/:fileId/remove",
+	removeFile
 );
 module.exports = router;

@@ -165,7 +165,9 @@ const addFile = async (req, res) => {
     try {
         let result=null; 
         if(req.file)
-            result = await cloudinary.v2.uploader.upload(req.file.path);
+            result = await cloudinary.v2.uploader.upload(req.file.path, {
+							resource_type: "auto",
+						});
         
         
         const existingCourse = await Course.findOne({
@@ -176,7 +178,7 @@ const addFile = async (req, res) => {
 
         existingCourse.files.push({
 					text: name,
-					file: result ? result.url : null,
+					file: result ? result.secure_url : null,
         });
         
         await existingCourse.save();
@@ -193,6 +195,56 @@ const addFile = async (req, res) => {
 
 }
 
+const removeFile = async (req, res) => {
+    const { categoryId, courseId, fileId } = req.params;
+    console.log(req.params);
+
+    // const existingCategory = await CourseCode.findById(categoryId);
+    
+    
+    // const courseCode = existingCategory.code;
+    
+    // console.log(existingCategory, " ", existingCourse);
+   
+    
+    try {
+			const existingCourse = await Course.findById(courseId);
+			if (!existingCourse)
+				return res.status(400).json({ message: "course not found..." });
+
+			const fileIndex = existingCourse.files.findIndex(
+				(file) => file.text == fileId
+			);
+
+			if (fileIndex == -1) {
+				return res.status(404).json({ message: "File not found..." });
+			}
+
+			// Remove the file from the array
+			const removedFile = existingCourse.files.splice(fileIndex, 1)[0];
+
+			// Save the updated course
+			await existingCourse.save();
+
+			// Optionally, remove the file from Cloudinary if needed
+			if (removedFile.url) {
+				const publicId = removedFile.url.split("/").pop().split(".")[0]; // Extract public ID from URL
+				await cloudinary.v2.uploader.destroy(publicId, {
+					resource_type: "auto",
+				});
+			}
+
+			return res
+				.status(200)
+				.json({ message: "File removed successfully", removedFile });
+		}
+    catch (error) {
+        console.log("error :", error);
+        return res.status(500).json({ message: "Server side error, Please try again" });
+    }
+
+
+}
 module.exports = {
 	getCategories,
 	addCategory,
@@ -202,5 +254,6 @@ module.exports = {
 	removeCourse,
 	getFiles,
 	addFile,
+	removeFile,
 };
 
