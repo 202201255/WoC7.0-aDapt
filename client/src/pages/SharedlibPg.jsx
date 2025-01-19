@@ -219,7 +219,7 @@ const SharedlibPg = () => {
 						{courses.length > 0 ? (
 							courses.map((course, index) => (
 								<div
-									className="card outline outline-primary text-primary text-2xl justify-center items-center font-bold flex hover:bg-primary hover:text-black"
+									className="card outline outline-primary text-primary text-2xl justify-center items-center font-bold flex hover:bg-primary hover:text-black cursor-pointer"
 									key={index}
 									onClick={() => handleCourseClick(course)}
 								>
@@ -299,11 +299,12 @@ const SharedlibPg = () => {
 			{/* File Section */}
 			{what === "file" && (
 				<>
-					<div className="grid gap-8">
+					<div className="flex flex-col items-center gap-8">
 						{files.length > 0 ? (
 							files.map((file, index) => (
 								<div
-									className="card outline outline-primary text-primary text-2xl justify-center items-center font-bold flex hover:bg-primary hover:text-black cursor-pointer"
+									className="card outline outline-primary text-primary text-2xl justify-center items-center font-bold flex hover:bg-primary hover:text-black cursor-pointer 
+									w-full md:w-1/2"
 									key={index}
 									onClick={() => window.open(file.file, "_blank")} // Open file in a new tab/window
 								>
@@ -316,6 +317,9 @@ const SharedlibPg = () => {
 							<p>No file for now.......</p>
 						)}
 					</div>
+
+					{/* Edit Dropdown */}
+
 					<div
 						tabIndex={0}
 						role="button"
@@ -352,7 +356,7 @@ const SharedlibPg = () => {
 								tabIndex={0}
 								role="button"
 								className={`text-xl btn btn-outline btn-success fixed right-28 bottom-4 m-1 ${
-									isAdmin ? "btn-disabled" : ""
+									!isAdmin ? "btn-disabled" : ""
 								}`}
 								onClick={isAdmin ? handleActionFile : undefined}
 							>

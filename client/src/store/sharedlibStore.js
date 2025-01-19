@@ -195,6 +195,7 @@ export const useSharedLibStore = create((set, get) => ({
 	},
 	// Remove a file
 	removeFile: async (categoryId, courseId, fileId) => {
+		console.log("remove file", categoryId, courseId, fileId);
 		set({ isLoading: true });
 		try {
 			await axiosInstance.post(

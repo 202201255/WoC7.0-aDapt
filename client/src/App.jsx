@@ -14,6 +14,7 @@ import FoundPg from "./pages/FoundPg.jsx";
 import QnAForm from "./components/QnAForm.jsx";
 import LnFForm from "./components/LnFForm.jsx";
 import EmailForm from "./components/EmailForm.jsx";
+import EmailRemoveForm from "./components/EmailRemoveForm.jsx";
 import SharedlibForm from "./components/SharedlibForm.jsx";
 import { Toaster } from "react-hot-toast";
 const App = () => {
@@ -80,6 +81,10 @@ const App = () => {
 					<Route
 						path="/mail_upload"
 						element={authUser ? <EmailForm /> : <Navigate to="/" />}
+					/>
+					<Route
+						path="/mail_remove"
+						element={authUser ? <EmailRemoveForm /> : <Navigate to="/" />}
 					/>
 					<Route
 						path="/file_upload"
