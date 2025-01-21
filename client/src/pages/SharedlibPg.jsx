@@ -127,11 +127,12 @@ const SharedlibPg = () => {
 			{/* Category Section */}
 			{what === "category" && (
 				<>
-					<div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-7 xl:grid-cols-8 gap-4">
+					<div className="flex flex-col items-center gap-8">
 						{categories.length > 0 ? (
 							categories.map((category, index) => (
 								<div
-									className="card outline outline-primary text-primary text-2xl justify-center items-center font-bold flex hover:bg-primary hover:text-black cursor-pointer"
+									className="card outline outline-primary text-primary text-2xl justify-center items-center font-bold flex hover:bg-primary hover:text-black cursor-pointer 
+									w-full md:w-1/2"
 									key={index}
 									onClick={() => handleCategoryClick(category)}
 								>

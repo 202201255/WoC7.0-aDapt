@@ -106,11 +106,11 @@ const QnAPg = () => {
   };
 
   return (
-		<div className="m-4">
+		<div className="m-4 ">
 			{/* Back Button */}
 			{what === "qna" && (
 				<button
-					className="btn btn-outline btn-primary fixed bottom-5 text-xl"
+					className="btn btn-outline btn-primary fixed bottom-10 left-10 text-xl z-10 "
 					onClick={goBack}
 				>
 					Back
@@ -119,7 +119,7 @@ const QnAPg = () => {
 
 			{what === "chat" && (
 				<button
-					className="btn btn-outline btn-primary fixed z-10 right-4 text-xl"
+					className="btn btn-outline btn-primary fixed z-30 right-4 text-xl"
 					onClick={goBack}
 				>
 					Back
@@ -176,6 +176,7 @@ const QnAPg = () => {
 							<ul
 								tabIndex={0}
 								className="dropdown-content menu text-xl text-black bg-primary rounded-box z-[1] w-52 p-2 m-1 shadow"
+								
 							>
 								<li>
 									<a onClick={() => setIt("add")}>Add</a>
@@ -250,7 +251,7 @@ const QnAPg = () => {
 						role="button"
 						className="text-xl fixed right-4 bottom-4 btn btn-outline btn-primary m-1"
 					>
-						<Link to="/qna_upload" className="text-xl">
+						<Link to="/qna_upload" className="text-xl ;">
 							Add
 						</Link>
 					</div>
@@ -275,41 +276,42 @@ const QnAPg = () => {
 						</div>
 					</div>
 					<div className="flex-1 overflow-y-auto p-4 space-y-4">
-					  {answers.length > 0 ?
-						  (
-						  answers.map((answer, index) => (
-							<div
-								className={
-									authUser._id === answer.senderId
-										? "chat chat-start"
-										: "chat chat-end"
-								}
-								key={answer._id || index}
-							>
-								<div className="chat-image avatar">
-									<div className="size-10 rounded-full border">
-										<img src={"https://via.placeholder.com/150"} alt="Avatar" />
+						{answers.length > 0 ? (
+							answers.map((answer, index) => (
+								<div
+									className={
+										authUser._id === answer.senderId
+											? "chat chat-start"
+											: "chat chat-end"
+									}
+									key={answer._id || index}
+								>
+									<div className="chat-image avatar">
+										<div className="size-10 rounded-full border">
+											<img
+												src={"https://via.placeholder.com/150"}
+												alt="Avatar"
+											/>
+										</div>
+									</div>
+
+									<div className="chat-bubble flex flex-col">
+										{answer.file && (
+											<img
+												src={answer.file || "https://via.placeholder.com/150"}
+												alt="Content"
+												className="sm:max-w-[200px] rounded-md mb-2"
+											/>
+										)}
+										<p className="text-xl">
+											{answer.text || "No content available."}
+										</p>
 									</div>
 								</div>
-
-								<div className="chat-bubble flex flex-col">
-									{answer.file && (
-										<img
-											src={answer.file || "https://via.placeholder.com/150"}
-											alt="Content"
-											className="sm:max-w-[200px] rounded-md mb-2"
-										/>
-									)}
-									<p className="text-xl">
-										{answer.text || "No content available."}
-									</p>
-								</div>
-							</div>
-						  ))
-						  ) : (
+							))
+						) : (
 							<p>No answers found.....</p>
-						  )
-						}
+						)}
 					</div>
 					<AnswerInput
 						questionId={selectedQuestionId}

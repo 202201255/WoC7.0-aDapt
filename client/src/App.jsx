@@ -5,12 +5,14 @@ import HomePg from "./pages/HomePg.jsx";
 import SignUpPg from "./pages/SignupPg.jsx";
 import LoginPg from "./pages/LoginPg.jsx";
 import { useAuthStore } from "./store/authStore.js";
+import { useThemeStore } from "./store/useThemeStore.js";
 import { Loader } from "lucide-react";
 import QnAPg from "./pages/QnAPg.jsx";
 import SharedlibPg from "./pages/SharedlibPg.jsx";
 import EmailPg from "./pages/EmailPg.jsx";
 import LostPg from "./pages/LostPg.jsx";
 import FoundPg from "./pages/FoundPg.jsx";
+import SettingsPage from "./pages/SettingsPage.jsx";
 import QnAForm from "./components/QnAForm.jsx";
 import LnFForm from "./components/LnFForm.jsx";
 import EmailForm from "./components/EmailForm.jsx";
@@ -18,6 +20,8 @@ import EmailRemoveForm from "./components/EmailRemoveForm.jsx";
 import SharedlibForm from "./components/SharedlibForm.jsx";
 import { Toaster } from "react-hot-toast";
 const App = () => {
+	
+	const { theme }=useThemeStore();
 	const { authUser, checkAuth, isCheckingAuth } = useAuthStore();
 	const token = localStorage.getItem("token");
 	useEffect(() => {
@@ -35,7 +39,7 @@ const App = () => {
 
 	return (
 		<BrowserRouter>
-			<div>
+			<div data-theme={theme}>
 				<Navbar />
 				<Routes>
 					<Route
@@ -89,6 +93,10 @@ const App = () => {
 					<Route
 						path="/file_upload"
 						element={authUser ? <SharedlibForm /> : <Navigate to="/" />}
+					/>
+					<Route
+						path="/settings"
+						element={authUser ? <SettingsPage /> : <Navigate to="/" />}
 					/>
 				</Routes>
 				<Toaster />

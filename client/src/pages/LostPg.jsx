@@ -21,7 +21,7 @@ const LostPg = () => {
         connectSocket,
         dissconnectSocket,
     } = useLnFStore();
-    const { authUser } = useAuthStore();
+    const { authUser,isAdmin } = useAuthStore();
 
     const [it, setIt] = useState(",");
     const [render, setRender] = useState(false);
@@ -136,8 +136,8 @@ const LostPg = () => {
                             <div
                                 tabIndex={0}
                                 role="button"
-                                className={`text-xl btn btn-outline btn-primary m-1 ${!authUser.isAdmin ? "btn-disabled" : ""}`}
-                                onClick={() => authUser.isAdmin && setRender(true)} // Only allow setting render when isAdmin is true
+                                className={`text-xl btn btn-outline btn-primary m-1 ${!isAdmin ? "btn-disabled" : ""}`}
+                                onClick={() => isAdmin && setRender(true)} // Only allow setting render when isAdmin is true
                             >
                                 Edit
                             </div>
@@ -145,13 +145,13 @@ const LostPg = () => {
                             <div
                                 tabIndex={0}
                                 role="button"
-                                className={`text-xl btn btn-outline btn-success m-1 ${!authUser.isAdmin ? "btn-disabled" : ""}`}
-                                onClick={authUser.isAdmin ? handleAction : undefined} // Only allow action when isAdmin is true
+                                className={`text-xl btn btn-outline btn-success m-1 ${!isAdmin ? "btn-disabled" : ""}`}
+                                onClick={isAdmin ? handleAction : undefined} // Only allow action when isAdmin is true
                             >
                                 Okay
                             </div>
                         )}
-                        {authUser.isAdmin && ( // Only show dropdown menu when isAdmin is true
+                        {isAdmin && ( // Only show dropdown menu when isAdmin is true
                             <ul tabIndex={0} className="dropdown-content menu text-xl text-black bg-primary rounded-box z-[1] w-52 p-2 m-1 shadow">
                                 <li><a onClick={() => setIt("add")}>Add</a></li>
                                 <li><a onClick={() => setIt("remove")}>Remove</a></li>
