@@ -127,7 +127,7 @@ const Navbar = () => {
 							<li>
 								<Link
 									to="/qna"
-									className="text-lg nav-item hover:text-yellow-400"
+									className="text-lg hover:text-primary bg-neutral-focus hover:bg-neutral rounded-md"
 								>
 									QnA
 								</Link>
@@ -135,7 +135,7 @@ const Navbar = () => {
 							<li>
 								<Link
 									to="/sharedlib"
-									className="text-lg nav-item hover:text-yellow-400"
+									className="text-lg hover:text-primary bg-neutral-focus hover:bg-neutral rounded-md"
 								>
 									Library
 								</Link>
@@ -143,7 +143,7 @@ const Navbar = () => {
 							<li>
 								<Link
 									to="/emails"
-									className="text-lg nav-item hover:text-yellow-400"
+									className="text-lg hover:text-primary bg-neutral-focus hover:bg-neutral rounded-md"
 								>
 									ImpMails
 								</Link>
@@ -153,23 +153,17 @@ const Navbar = () => {
 							</li> */}
 							<li>
 								<details>
-									<summary className="text-lg  nav-item hover:text-yellow-400 cursor-pointer">
+									<summary className="text-lg nav-item hover:text-primary cursor-pointer">
 										LnF
 									</summary>
-									<ul className="p-2 bg-gray-100 rounded-lg shadow-md">
-										<li>
-											<Link
-												to="/lost"
-												className="text-lg hover:text-yellow-500"
-											>
+									<ul className="p-2 bg-neutral text-neutral-content rounded-lg shadow-md">
+										<li className="py-1 px-2 bg-neutral-focus hover:bg-neutral rounded-md">
+											<Link to="/lost" className="text-lg hover:text-primary">
 												Lost
 											</Link>
 										</li>
-										<li>
-											<Link
-												to="/found"
-												className="text-lg hover:text-yellow-500"
-											>
+										<li className="py-1 px-2 bg-neutral-focus hover:bg-neutral rounded-md">
+											<Link to="/found" className="text-lg hover:text-primary">
 												Found
 											</Link>
 										</li>
