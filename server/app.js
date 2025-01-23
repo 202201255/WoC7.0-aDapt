@@ -69,6 +69,10 @@ app.use("/api/mail", emailRouter);
 io.on("connection", (socket) => {
 	console.log("User connected:", socket.id);
 
+	socket.on("sendAnswer", (data) => {
+		console.log("newAnswer--->", data);
+		io.emit("receiveAnswer", data);
+	});
 	// Now you can handle user-specific logic
 	socket.on("message", (data) => {
 		// const { message, room } = data;

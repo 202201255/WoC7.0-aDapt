@@ -7,9 +7,11 @@ import { gsap } from "gsap";
 
 import LogoutButton from "./design/LogoutButton";
 import SettingButton from "./design/SettingButton.jsx";
-
+import ProfileIcon from "./design/ProfileIcon.jsx";
+// import PermIdentitySharpIcon from "@mui/icons-material/PermIdentitySharp";
+import HoverDropdown from './design/HoverDropDown.jsx';
 const Navbar = () => {
-    const { authUser,checkAuth } = useAuthStore();
+    const { authUser,checkAuth, isAdmin } = useAuthStore();
     const navigate = useNavigate();
     
     //  const handleLogout = () => {
@@ -48,7 +50,7 @@ const Navbar = () => {
 			}, []);
     return (
 			<div>
-				<div className="navbar text-white my-3 relative z-50 shadow-lg">
+				<div className="navbar text-white  relative z-50 shadow-lg">
 					<div className="navbar-start">
 						<div className="dropdown">
 							<div
@@ -117,9 +119,7 @@ const Navbar = () => {
 							</ul>
 						</div>
 						<Link to="/" className="btn btn-ghost text-3xl logo font-bold">
-							<span >
-								aDApt
-							</span>
+							<span>aDApt</span>
 						</Link>
 					</div>
 					<div className="navbar-center hidden lg:flex">
@@ -148,9 +148,12 @@ const Navbar = () => {
 									ImpMails
 								</Link>
 							</li>
+							{/* <li>
+							<HoverDropdown />
+							</li> */}
 							<li>
 								<details>
-									<summary className="text-lg nav-item hover:text-yellow-400 cursor-pointer">
+									<summary className="text-lg  nav-item hover:text-yellow-400 cursor-pointer">
 										LnF
 									</summary>
 									<ul className="p-2 bg-gray-100 rounded-lg shadow-md">
@@ -182,17 +185,22 @@ const Navbar = () => {
 						>
 							Logout
 						</button> */}
-                    <div className="mx-4">
-
-                        <SettingButton/>
-                    </div>
+						<div className="mx-4">
+							<SettingButton />
+						</div>
 						<LogoutButton />
-						<Link
-							to="/signup"
-							className="btn text-lg mx-4 bg-green-500 hover:bg-green-600 text-white transition-transform transform hover:scale-105"
-						>
-							Register
-						</Link>
+
+						{!authUser && (
+							<Link
+								to="/signup"
+								className="btn text-lg mx-4 bg-green-500 hover:bg-green-600 text-white transition-transform transform hover:scale-105"
+							>
+								Register
+							</Link>
+						)}
+
+						{/* <ProfileIcon /> */}
+						{/* <PermIdentitySharpIcon className="text-white mx-4" /> */}
 					</div>
 				</div>
 			</div>

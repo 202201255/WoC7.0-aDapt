@@ -18,6 +18,11 @@ export const useQnAStore = create((set, get) => ({
 	setIsLoading: (value) => set({ isLoading: value }),
 
 	// Fetch the list of categories
+	sendAnswerrrr: async (data) => {
+		set((state) => ({
+			answers: [...state.answers, data],
+		}));
+	},
 	getCategories: async () => {
 		set({ isLoading: true });
 		try {
@@ -156,6 +161,13 @@ export const useQnAStore = create((set, get) => ({
 			formData.append("senderId", answerData.senderId);
 			console.log("jj");
 
+			const { socket } = useAuthStore.getState();
+			socket.emit("newAnswer", {
+				questionId: answerData.questionId,
+				newAnswer: answerData,
+			});
+
+			
 			// console.log(formData);
 			const res = await axiosInstance.post(
 				`/qna/categories/${category}/answers`,
@@ -166,10 +178,11 @@ export const useQnAStore = create((set, get) => ({
 					},
 				}
 			);
+
 			console.log(res);
-			set((state) => ({
-				answers: [...state.answers, res.data],
-			}));
+			// set((state) => ({
+			// 	answers: [...state.answers, res.data],
+			// }));
 			toast.success("Answer sent successfully.");
 		} catch (error) {
 			toast.error("Failed to send answer.");

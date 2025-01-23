@@ -106,7 +106,7 @@ const QnAPg = () => {
   };
 
   return (
-		<div className="m-4 ">
+		<div className="m-4 min-h-screen">
 			{/* Back Button */}
 			{what === "qna" && (
 				<button
@@ -129,11 +129,12 @@ const QnAPg = () => {
 			{/* Category Section */}
 			{what === "category" && (
 				<>
-					<div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-7 xl:grid-cols-8 gap-4">
+					<div className="flex flex-col items-center gap-8">
 						{categories.length > 0 ? (
 							categories.map((category, index) => (
 								<div
-									className="card outline outline-primary text-primary text-2xl justify-center items-center font-bold flex hover:bg-primary hover:text-black cursor-pointer"
+									className="card outline outline-primary text-primary text-2xl justify-center items-center font-bold flex hover:bg-primary hover:text-black cursor-pointer 
+									w-full md:w-1/2"
 									key={index}
 									onClick={() => handleCategoryClick(category)}
 								>
@@ -176,7 +177,6 @@ const QnAPg = () => {
 							<ul
 								tabIndex={0}
 								className="dropdown-content menu text-xl text-black bg-primary rounded-box z-[1] w-52 p-2 m-1 shadow"
-								
 							>
 								<li>
 									<a onClick={() => setIt("add")}>Add</a>
@@ -303,9 +303,10 @@ const QnAPg = () => {
 												className="sm:max-w-[200px] rounded-md mb-2"
 											/>
 										)}
-										<p className="text-xl">
+										{answer.text && <p className="text-xl">{answer.text}</p>}
+										{/* <p className="text-xl">
 											{answer.text || "No content available."}
-										</p>
+										</p> */}
 									</div>
 								</div>
 							))

@@ -18,7 +18,7 @@ const checkAuth = async (req, res) => {
 };
 
 const signup = async (req, res) => {
-	console.log("hibvjijbfi", req.body);
+	// console.log("hibvjijbfi", req.body);
 	const { fullName, email, password } = req.body;
 
 	// Validate the input fields
@@ -31,11 +31,11 @@ const signup = async (req, res) => {
 	if (existingUser) {
 		return res.status(409).json({ message: "Email already in use!" });
 	}
-	console.log("hibvjijbfi");
+	// console.log("hibvjijbfi");
 	// Add your signup logic here
 
 	const newUser = await User.create({ fullName, email, password });
-	console.log("hibvjijbfi");
+	// console.log("hibvjijbfi");
 
 	const token = createToken(newUser);
 	res.cookie("token", token, { httpOnly: true, secure: false });
@@ -55,16 +55,16 @@ const login = async (req, res) => {
 
 	// Add your login logic here
 	try {
-		console.log("hibvjijbfi");
+		// console.log("hibvjijbfi");
 		const user = await User.findOne({ email });
 		if (!user) {
 			return res.status(400).json({ message: "Invalid email or password" });
 		}
 
-		console.log("hibvjijbfi");
+		// console.log("hibvjijbfi");
 		const token = await User.matchPasswordAndGenerateToken(email, password);
 
-		console.log("hibvjijbfi");
+		// console.log("hibvjijbfi");
 		// console.log("User", user);
 
 		// Set the token in the cookie
@@ -86,24 +86,24 @@ const login = async (req, res) => {
 };
 
 const adminSignup = async (req, res) => {
-	console.log("hibvjijbfi", req.body);
+	// console.log("hibvjijbfi", req.body);
 	const { fullName, email, password, admincode } = req.body;
 
 	if (admincode !== "JayRathod12345") {
 		return res.status(400).json({ message: "Please Enter valid adminKey" });
 	}
-	console.log("hibvjijbfi");
+	// console.log("hibvjijbfi");
 	if (!fullName || !email || !password || !admincode) {
 		// Validate the input fields
 		return res.status(400).json({ message: "All fields are required!" });
 	}
-	console.log("hibvjijbfi");
+	// console.log("hibvjijbfi");
 	// Check if the email is already in use
 	const existingAdmin = await User.findOne({ email });
 	if (existingAdmin) {
 		return res.status(409).json({ message: "Email already in use!" });
 	}
-	console.log("hibvjijbfi");
+	// console.log("hibvjijbfi");
 	// Add your signup logic here
 
 	const newAdmin = await User.create({
@@ -115,7 +115,7 @@ const adminSignup = async (req, res) => {
 	const token = createToken(newAdmin);
 	res.cookie("token", token, { httpOnly: true, secure: false });
 
-	console.log("hibvjijbfi");
+	// console.log("hibvjijbfi");
 	return res.status(201).json({
 		message: "Admin signed up successfully!",
 		user: {
@@ -137,16 +137,16 @@ const adminLogin = async (req, res) => {
 	}
 
 	try {
-		console.log("hibvjijbfi");
+		// console.log("hibvjijbfi");
 		const admin = await User.findOne({ email });
 		if (!admin) {
 			return res.status(400).json({ message: "Invalid email or password" });
 		}
 
-		console.log("hibvjijbfi");
+		// console.log("hibvjijbfi");
 		const token = await User.matchPasswordAndGenerateToken(email, password);
 
-		console.log("hibvjijbfi");
+		// console.log("hibvjijbfi");
 		// console.log("User", user);
 
 		// Set the token in the cookie

@@ -17,7 +17,7 @@ const addCategory = async (req, res) => {
 	console.log(req.body);
 	const { category } = req.body;
 
-	let name = category;
+	let name = category; 
 	console.log("ji", name);
 
 	if (!name) return res.status(400).json({ message: "Please enter name" });
