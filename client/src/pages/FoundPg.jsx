@@ -6,6 +6,77 @@ import foundMarkImage from '../assets/search_mark.jpg';
 import ReplyInput from '../components/ReplyInput';
 import { useAuthStore } from '../store/authStore';
 
+
+import LOADING_GIF from "../assets/typing.gif";
+
+const TypingUsers = ({ isUserTyping, setIsUserTyping }) => {
+    const [currentUser, setCurrentUser] = useState(null);
+
+    useEffect(() => {
+        const keys = Object.keys(isUserTyping).filter((key) => isUserTyping[key]); // Filter users with `true`
+        let index = 0;
+        if (index < keys.length) {
+            const user = keys[index];
+            setCurrentUser(user);
+
+            setTimeout(() => {
+                setIsUserTyping((prev) => {
+                    const updatedState = { ...prev };
+                    delete updatedState[user]; // Remove the key entirely
+                    return updatedState;
+                });
+            }, 3000);
+
+            index++;
+        }
+
+        const interval = setInterval(() => {
+            if (index < keys.length) {
+                const user = keys[index];
+                setCurrentUser(user);
+
+                // After 0.5 seconds, delete the user key from the state
+                setTimeout(() => {
+                    setIsUserTyping((prev) => {
+                        const updatedState = { ...prev };
+                        delete updatedState[user]; // Remove the key entirely
+                        return updatedState;
+                    });
+                }, 1000);
+
+                index++;
+            } else {
+                clearInterval(interval); // Stop when all users are processed
+                setCurrentUser(null);
+            }
+        },1000); // Switch to the next user every 0.5 seconds
+
+        return () => clearInterval(interval); // Clean up interval on unmount
+    }, [isUserTyping, setIsUserTyping]);
+
+    return (
+        <div>
+            {currentUser ? (
+                <>
+                    <p>{currentUser} is typing... </p>{" "}
+                    <img
+                        style={{
+                            borderRadius: "25px",
+                            objectFit: "cover",
+                            backgroundColor: "red",
+                            width: "100px",
+                            height: "40px",
+                        }}
+                        src={LOADING_GIF}
+                        alt="LOADING_GIF"
+                    />
+                </>
+            ) : null}
+        </div>
+    );
+};
+
+
 const FoundPg = () => {
     const {
         getPlaces,
@@ -22,7 +93,7 @@ const FoundPg = () => {
         connectSocket,
         dissconnectSocket,
     } = useLnFStore();
-    const { authUser,isAdmin } = useAuthStore();
+    const { authUser,isAdmin,socket } = useAuthStore();
 
     const [it, setIt] = useState(",");
     const [render, setRender] = useState(false);
@@ -94,7 +165,20 @@ const FoundPg = () => {
         }
         return text;
     };
-
+     useEffect(() => {
+                const handleIsTyping = (data) => {
+                    setIsUserTyping((prev) => ({
+                        ...prev,
+                        [data.name]: true,
+                    }));
+                };
+        
+                socket.on("lnf:is-typing", handleIsTyping);
+        
+                return () => {
+                    socket.off("lnf:is-typing", handleIsTyping);
+                };
+            }, [socket]);
     return (
         <div className='m-4'>
 
@@ -265,7 +349,13 @@ const FoundPg = () => {
                             ))
                             ) :
                             (<p>No reply found</p>)
-                    }
+                        }
+                         <div className={"chat chat-start"}>
+							<TypingUsers
+								isUserTyping={isUserTyping}
+								setIsUserTyping={setIsUserTyping}
+							/>
+						</div>
                     </div>
                     <ReplyInput msgId={selctedMsgId} place={currentPlace} />
                 </>

@@ -6,106 +6,186 @@ import questionMarkImage from "../assets/question_mark.jpg";
 import AnswerInput from "../components/AnswerInput";
 import { useAuthStore } from "../store/authStore";
 
+import LOADING_GIF from "../assets/typing.gif";
+
+const TypingUsers = ({ isUserTyping, setIsUserTyping }) => {
+	const [currentUser, setCurrentUser] = useState(null);
+
+	useEffect(() => {
+		const keys = Object.keys(isUserTyping).filter((key) => isUserTyping[key]); // Filter users with `true`
+		let index = 0;
+		if (index < keys.length) {
+			const user = keys[index];
+			setCurrentUser(user);
+
+			setTimeout(() => {
+				setIsUserTyping((prev) => {
+					const updatedState = { ...prev };
+					delete updatedState[user]; // Remove the key entirely
+					return updatedState;
+				});
+			}, 3000);
+
+			index++;
+		}
+
+		const interval = setInterval(() => {
+			if (index < keys.length) {
+				const user = keys[index];
+				setCurrentUser(user);
+
+				// After 0.5 seconds, delete the user key from the state
+				setTimeout(() => {
+					setIsUserTyping((prev) => {
+						const updatedState = { ...prev };
+						delete updatedState[user]; // Remove the key entirely
+						return updatedState;
+					});
+				}, 3000);
+
+				index++;
+			} else {
+				clearInterval(interval); // Stop when all users are processed
+				setCurrentUser(null);
+			}
+		}, 2000); // Switch to the next user every 0.5 seconds
+
+		return () => clearInterval(interval); // Clean up interval on unmount
+	}, [isUserTyping, setIsUserTyping]);
+
+	return (
+		<div>
+			{currentUser ? (
+				<>
+					<p>{currentUser} is typing... </p>{" "}
+					<img
+						style={{
+							borderRadius: "25px",
+							objectFit: "cover",
+							backgroundColor: "red",
+							width: "100px",
+							height: "40px",
+						}}
+						src={LOADING_GIF}
+						alt="LOADING_GIF"
+					/>
+				</>
+			) : null}
+		</div>
+	);
+};
 
 const QnAPg = () => {
-  const {
-    getCategories,
-    addCategory,
-    removeCategory,
-    getAnswers,
-    sendQuestion,
-    sendAnswer,
-    getQuestions,
-    categories,
-    setCategories,
-    setQuestions,
-    setAnswers,
-    questions,
-    answers,
-    connectSocket,
-    dissconnectSocket,
-  } = useQnAStore();
-  const { authUser, socket,isAdmin } = useAuthStore();
+	const {
+		getCategories,
+		addCategory,
+		removeCategory,
+		getAnswers,
+		sendQuestion,
+		sendAnswer,
+		getQuestions,
+		categories,
+		setCategories,
+		setQuestions,
+		setAnswers,
+		questions,
+		answers,
+		connectSocket,
+		dissconnectSocket,
+	} = useQnAStore();
+	const { authUser, socket, isAdmin } = useAuthStore();
 
-  const [it, setIt] = useState("");
-  const [render, setRender] = useState(false);
-  const [inputValue, setInputValue] = useState("");
-  const [selectedQuestionId, setSelectedQuestionId] = useState(null);
-  const [selectedImg, setSelectedImg] = useState(null);
-  const [selectedText, setSelectedText] = useState(null);
-  const [currentCategory, setCurrentCategory] = useState(null);
-  const [what, setWhat] = useState("category"); // Control the visible section
+	const [it, setIt] = useState("");
+	const [render, setRender] = useState(false);
+	const [inputValue, setInputValue] = useState("");
+	const [selectedQuestionId, setSelectedQuestionId] = useState(null);
+	const [selectedImg, setSelectedImg] = useState(null);
+	const [selectedText, setSelectedText] = useState(null);
+	const [currentCategory, setCurrentCategory] = useState(null);
+	const [what, setWhat] = useState("category"); // Control the visible section
+	const [isUserTyping, setIsUserTyping] = useState({});
 
-	
-	
-	
-  useEffect(() => {
+	useEffect(() => {
+		const fetchCat = async () => {
+			await getCategories();
+		};
 
-    const fetchCat = async () => {
-      await getCategories();
-    };
+		fetchCat();
 
-    fetchCat();
+		console.log("lastone", categories);
+	}, []);
 
-    console.log("lastone", categories);
-  }, []);
+	// Connect socket when the component mounts and disconnect when unmounted
+	useEffect(() => {
+		connectSocket();
 
-  // Connect socket when the component mounts and disconnect when unmounted
-  useEffect(() => {
-	  connectSocket();
-	  
-    return () => dissconnectSocket();
-  }, [connectSocket, dissconnectSocket]);
+		return () => dissconnectSocket();
+	}, [connectSocket, dissconnectSocket]);
 
-  const handleAction = async () => {
-    if (it === "add" && inputValue.trim() !== "") {
+	const handleAction = async () => {
+		if (it === "add" && inputValue.trim() !== "") {
 			await addCategory(inputValue);
 		} else if (it === "remove" && inputValue.trim() !== "") {
 			await removeCategory(inputValue);
 		}
-    setRender(false); // Close input field
-    setIt(""); // Reset action
-    setInputValue(""); // Clear input value
-  };
+		setRender(false); // Close input field
+		setIt(""); // Reset action
+		setInputValue(""); // Clear input value
+	};
 
 	const handleCategoryClick = async (category) => {
-	//   console.log("hello ji	");
-    setCurrentCategory(category);
+		//   console.log("hello ji	");
+		setCurrentCategory(category);
 		await getQuestions(category);
 		console.log("here is ", questions);
-    setWhat("qna"); // Switch to question display
-  };
+		setWhat("qna"); // Switch to question display
+	};
 
 	const handleQuestionClick = async (questionId, img, content) => {
 		console.log("jai shree ram");
-		
+
 		console.log("before", answers);
-    setSelectedQuestionId(questionId);
-    setSelectedImg(img);
+		setSelectedQuestionId(questionId);
+		setSelectedImg(img);
 		setSelectedText(content);
 		console.log(currentCategory.name, " ", questionId);
-    await getAnswers(currentCategory.name, questionId);
+		await getAnswers(currentCategory.name, questionId);
 		setWhat("chat"); // Switch to chat view
-		
+
 		console.log("after", answers);
-  };
+	};
 
-  const goBack = () => {
-    if (what === "chat") {
-      setWhat("qna"); // Go back to question display
-    } else if (what === "qna") {
-      setWhat("category"); // Go back to category selection
-    }
-  };
+	const goBack = () => {
+		if (what === "chat") {
+			setWhat("qna"); // Go back to question display
+		} else if (what === "qna") {
+			setWhat("category"); // Go back to category selection
+		}
+	};
 
-  const truncateText = (text, length) => {
-    if (text.length > length) {
-      return text.substring(0, length) + "...";
-    }
-    return text;
-  };
+	const truncateText = (text, length) => {
+		if (text.length > length) {
+			return text.substring(0, length) + "...";
+		}
+		return text;
+	};
 
-  return (
+	useEffect(() => {
+		const handleIsTyping = (data) => {
+			setIsUserTyping((prev) => ({
+				...prev,
+				[data.name]: true,
+			}));
+		};
+
+		socket.on("qna:is-typing", handleIsTyping);
+
+		return () => {
+			socket.off("qna:is-typing", handleIsTyping);
+		};
+	}, [socket]);
+
+	return (
 		<div className="m-4 min-h-screen">
 			{/* Back Button */}
 			{what === "qna" && (
@@ -313,6 +393,12 @@ const QnAPg = () => {
 						) : (
 							<p>No answers found.....</p>
 						)}
+						<div className={"chat chat-start"}>
+							<TypingUsers
+								isUserTyping={isUserTyping}
+								setIsUserTyping={setIsUserTyping}
+							/>
+						</div>
 					</div>
 					<AnswerInput
 						questionId={selectedQuestionId}

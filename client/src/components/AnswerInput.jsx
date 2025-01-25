@@ -50,9 +50,9 @@ const AnswerInput = ({ questionId, category }) => {
 		}
 
 		const handleReceiveAnswer = (data) => {
-            console.log("data --->", data);
-            
-            sendAnswerrrr(data);
+			console.log("data --->", data);
+
+			sendAnswerrrr(data);
 			// set((state) => ({
 			// 	answers: [...state.answers, data],
 			// }));
@@ -115,6 +115,15 @@ const AnswerInput = ({ questionId, category }) => {
 			reader.onerror = (error) => reject(error);
 		});
 
+	const handleChangeText = (e) => {
+		// console.log("authUser", authUser);
+		socket.emit("qna:is-typing", {
+			isTyping: true,
+			name: authUser?.user?.fullName ? authUser.user.fullName : "SOMEONE",
+		});
+		setText(e.target.value);
+	};
+
 	return (
 		<div className="p-4 w-full">
 			{/* File Preview */}
@@ -145,7 +154,7 @@ const AnswerInput = ({ questionId, category }) => {
 						className="w-full input input-bordered rounded-lg input-sm sm:input-md"
 						placeholder="Type your answer..."
 						value={text}
-						onChange={(e) => setText(e.target.value)}
+						onChange={handleChangeText}
 					/>
 
 					{/* File Input */}

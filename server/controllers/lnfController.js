@@ -48,6 +48,7 @@ const removePlace = async (req, res) => {
         if (!place) return res.status(404).json({ message: "Place not found." });
 
         await Location.findOneAndDelete({ name: placeId });
+        await Vastu.deleteMany({ location: placeId });
 
 		return res
 					.status(200)

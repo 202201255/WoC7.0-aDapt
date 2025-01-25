@@ -108,6 +108,13 @@ const ReplyInput = ({ msgId, place }) => {
         }
     };
 
+    const handleChangeText = (e) => {
+        socket.emit("lnf:is-typing", {
+            isTyping: true,
+            name: authUser?.user?.fullName ? authUser.user.fullName : "SOMEONE",
+        });
+        setText(e.target.value);
+    }
 
     return (
         <div className="p-4 w-full">
@@ -139,7 +146,7 @@ const ReplyInput = ({ msgId, place }) => {
                         className="w-full input input-bordered rounded-lg input-sm sm:input-md"
                         placeholder="Type your answer..."
                         value={text}
-                        onChange={(e) => setText(e.target.value)}
+                        onChange={handleChangeText}
                     />
 
                     {/* File Input */}

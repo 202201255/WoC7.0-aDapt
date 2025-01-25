@@ -14,7 +14,7 @@ const checkAuth = async (req, res) => {
 
 	return res
 		.status(200)
-		.json({ message: "User logged in successfully!", token, _id: payload._id });
+		.json({ message: "User logged in successfully!", token, _id: payload._id,user:payload });
 };
 
 const signup = async (req, res) => {
@@ -57,7 +57,7 @@ const login = async (req, res) => {
 	try {
 		// console.log("hibvjijbfi");
 		const user = await User.findOne({ email });
-		if (!user) {
+		if (!user) { 
 			return res.status(400).json({ message: "Invalid email or password" });
 		}
 
@@ -73,7 +73,7 @@ const login = async (req, res) => {
 		// Respond with a success message
 		return res
 			.status(200)
-			.json({ message: "User logged in successfully!", token, _id: user._id });
+			.json({ message: "User logged in successfully!", token, _id: user._id,user });
 
 		// return res.cookie("token", token);
 		// return res.cookie("token", token).redirect("/");
@@ -157,6 +157,7 @@ const adminLogin = async (req, res) => {
 			message: "admin logged in successfully!",
 			token,
 			_id: admin._id,
+			user:admin
 		});
 
 		// return res.cookie("token", token);

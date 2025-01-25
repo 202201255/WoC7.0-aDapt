@@ -20,9 +20,6 @@ mongoose
 	.connect("mongodb://localhost:27017/aDapt")
 	.then((e) => console.log("MongoDB connected"));
 
-
-
-
 const cors = require("cors");
 
 const http = require("http");
@@ -58,12 +55,11 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(checkForAuthenticationCookie("token"));
 
-
 app.use("/api/auth", authRouter);
 
 app.use("/api/qna", qnaRouter);
 
-app.use("/api/sharedlib",libRouter);
+app.use("/api/sharedlib", libRouter);
 
 app.use("/api/mail", emailRouter);
 
@@ -72,6 +68,12 @@ app.use("/api/lnf", lnfRouter);
 io.on("connection", (socket) => {
 	console.log("User connected:", socket.id);
 
+	socket.on("lnf:is-typing", (data) => {
+		socket.broadcast.emit("lnf:is-typing", data);
+	});
+	socket.on("qna:is-typing", (data) => {
+		socket.broadcast.emit("qna:is-typing", data);
+	});
 	socket.on("sendAnswer", (data) => {
 		console.log("newAnswer--->", data);
 		io.emit("receiveAnswer", data);
@@ -79,22 +81,22 @@ io.on("connection", (socket) => {
 
 	socket.on("sendReply", (data) => {
 		console.log("new reply -->", data);
-		io.emit("receiveReply",data);
+		io.emit("receiveReply", data);
 	});
 	// Now you can handle user-specific logic
 	socket.on("message", (data) => {
 		// const { message, room } = data;
-		console.log("this is socketData",data);
+		console.log("this is socketData", data);
 		// io.emit("receive-message", data);
 		// socket.broadcast.emit("receive-message", data);
 		// io.to(room).emit("receive-message", message);
 	});
-	
-	 socket.on("join-room", (room) => {
-			socket.join(room);
-			console.log(`User ${socket.id} joined room ${room}`);
-	 });
-	
+
+	socket.on("join-room", (room) => {
+		socket.join(room);
+		console.log(`User ${socket.id} joined room ${room}`);
+	});
+
 	socket.on("disconnect", () => {
 		console.log("User disconnected:", socket.id);
 	});
