@@ -76,6 +76,11 @@ io.on("connection", (socket) => {
 		console.log("newAnswer--->", data);
 		io.emit("receiveAnswer", data);
 	});
+
+	socket.on("sendReply", (data) => {
+		console.log("new reply -->", data);
+		io.emit("receiveReply",data);
+	});
 	// Now you can handle user-specific logic
 	socket.on("message", (data) => {
 		// const { message, room } = data;

@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useRef, useState,useEffect } from "react";
 import { Image, Send, X } from "lucide-react";
 import toast from "react-hot-toast";
 import imageCompression from "browser-image-compression"; // Import image compression library
@@ -9,7 +9,7 @@ const ReplyInput = ({ msgId, place }) => {
     const [file, setFile] = useState(null);
     const [filePreview, setFilePreview] = useState(null);
     const fileInputRef = useRef(null);
-    const { sendReply, setQId } = useLnFStore();
+    const { sendReply, setQId, sendReplyyyy } = useLnFStore();
     const { authUser, socket, isAdmin } = useAuthStore();
     const handleFileChange = async (e) => {
         const uploadedFile = e.target.files[0];
@@ -50,7 +50,25 @@ const ReplyInput = ({ msgId, place }) => {
             reader.onload = () => resolve(reader.result.split(',')[1]); // Extract only Base64 content
             reader.onerror = (error) => reject(error);
         });
+    useEffect(() => {
+			if (!socket) {
+				console.log("NO SOCKET");
+				return;
+			}
+			const handleReceiveReply = (data) => {
+				console.log("data --->", data);
 
+				sendReplyyyy(data);
+				// set((state) => ({
+				// 	answers: [...state.answers, data],
+				// }));
+			};
+			socket.on("receiveReply", handleReceiveReply);
+
+			return () => {
+				socket.off("receiveReply", handleReceiveReply);
+			};
+		}, []);
     const handleSendReply = async (e) => {
         e.preventDefault(); // Stop the default form submission
 
@@ -65,6 +83,8 @@ const ReplyInput = ({ msgId, place }) => {
             toast.error("No question selected!");
             return;
         }
+
+        socket.emit("sendReply", { msgId, text, file, senderId: authUser._id });
         setQId(msgId)
         console.log("I'm called")
         try {

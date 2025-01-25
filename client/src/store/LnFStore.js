@@ -18,6 +18,12 @@ export const useLnFStore = create((set, get) => ({
   // setAnswers: (value) => set({ answers: value }),
   // setIsLoading: (value) => set({ isLoading: value }),
 
+
+  sendReplyyyy: async (data)=>{
+    set((state) => ({
+			replies: [...state.replies, data],
+		}));
+  },
   // Fetch the list of places
   getPlaces: async () => {
     console.log("jai shree ram")  
@@ -233,9 +239,10 @@ export const useLnFStore = create((set, get) => ({
       );
       console.log("this is res", res.data);
 
-      set((state) => ({
-				replies: [...state.replies, res.data.newAnswer],
-			}));
+      // set((state) => ({
+			// 	replies: [...state.replies, res.data.newAnswer],
+      // }));
+      
       toast.success("Question sent successfully.");
     } catch (error) {
       toast.error("Failed to send reply.");
