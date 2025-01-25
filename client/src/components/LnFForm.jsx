@@ -61,7 +61,8 @@ const LnFForm = () => {
             console.log(file)
             const formData = {
                 text: text.trim(),
-                file: file ? await toBase64(file) : null, // Convert file to Base64
+                file: file
+                // file: file ? await toBase64(file) : null, // Convert file to Base64
             };
 
             if (type === 'Lost') await sendLostMessage(place.trim(), formData);

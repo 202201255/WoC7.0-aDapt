@@ -3,14 +3,14 @@ import { Image, Send, X } from "lucide-react";
 import toast from "react-hot-toast";
 import imageCompression from "browser-image-compression"; // Import image compression library
 import { useLnFStore } from "../store/LnFStore";
-
+import { useAuthStore } from "../store/authStore";
 const ReplyInput = ({ msgId, place }) => {
     const [text, setText] = useState("");
     const [file, setFile] = useState(null);
     const [filePreview, setFilePreview] = useState(null);
     const fileInputRef = useRef(null);
     const { sendReply, setQId } = useLnFStore();
-
+    const { authUser, socket, isAdmin } = useAuthStore();
     const handleFileChange = async (e) => {
         const uploadedFile = e.target.files[0];
         if (!uploadedFile) return;
@@ -71,7 +71,9 @@ const ReplyInput = ({ msgId, place }) => {
             const formData = {
                 msgId,
                 text: text.trim(),
-                file: file ? await toBase64(file) : null, // Convert file to Base64
+                file: file ,
+                senderId:authUser._id,
+                // file: file ? await toBase64(file) : null, // Convert file to Base64
             };
 
             await sendReply(place, formData);

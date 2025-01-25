@@ -22,7 +22,7 @@ const FoundPg = () => {
         connectSocket,
         dissconnectSocket,
     } = useLnFStore();
-    const { authUser } = useAuthStore();
+    const { authUser,isAdmin } = useAuthStore();
 
     const [it, setIt] = useState(",");
     const [render, setRender] = useState(false);
@@ -125,9 +125,9 @@ const FoundPg = () => {
                             <div
                                 className="card outline outline-primary text-primary text-2xl justify-center items-center font-bold flex hover:bg-primary hover:text-black"
                                 key={index}
-                                onClick={() => handlePlaceClick(placeObj.place)}
+                                onClick={() => handlePlaceClick(placeObj.name)}
                             >
-                                <div className="card-body">{placeObj.place}</div>
+                                <div className="card-body">{placeObj.name}</div>
                             </div>
                         ))}
                     </div>
@@ -137,8 +137,8 @@ const FoundPg = () => {
                             <div
                                 tabIndex={0}
                                 role="button"
-                                className={`text-xl btn btn-outline btn-primary m-1 ${!authUser.isAdmin ? "btn-disabled" : ""}`}
-                                onClick={() => authUser.isAdmin && setRender(true)} // Only allow setting render when isAdmin is true
+                                className={`text-xl btn btn-outline btn-primary m-1 ${!isAdmin ? "btn-disabled" : ""}`}
+                                onClick={() => isAdmin && setRender(true)} // Only allow setting render when isAdmin is true
                             >
                                 Edit
                             </div>
@@ -146,13 +146,13 @@ const FoundPg = () => {
                             <div
                                 tabIndex={0}
                                 role="button"
-                                className={`text-xl btn btn-outline btn-success m-1 ${!authUser.isAdmin ? "btn-disabled" : ""}`}
-                                onClick={authUser.isAdmin ? handleAction : undefined} // Only allow action when isAdmin is true
+                                className={`text-xl btn btn-outline btn-success m-1 ${!isAdmin ? "btn-disabled" : ""}`}
+                                onClick={isAdmin ? handleAction : undefined} // Only allow action when isAdmin is true
                             >
                                 Okay
                             </div>
                         )}
-                        {authUser.isAdmin && ( // Only show dropdown menu when isAdmin is true
+                        {isAdmin && ( // Only show dropdown menu when isAdmin is true
                             <ul tabIndex={0} className="dropdown-content menu text-xl text-black bg-primary rounded-box z-[1] w-52 p-2 m-1 shadow">
                                 <li><a onClick={() => setIt("add")}>Add</a></li>
                                 <li><a onClick={() => setIt("remove")}>Remove</a></li>
@@ -194,7 +194,7 @@ const FoundPg = () => {
                             <div
                                 className="card outline outline-primary outline-2 shadow-2xl flex flex-col m-2 hover:bg-primary hover:text-black transition-colors"
                                 key={found._id}
-                                onClick={() => handleMsgClick(found._id, found.file, found.text)}
+                                onClick={() => handleMsgClick(found._id, found.file, found.name)}
                             >
                                 <figure>
                                     <img
@@ -203,7 +203,7 @@ const FoundPg = () => {
                                     />
                                 </figure>
                                 <div className="card-body text-xl">
-                                    <p>{truncateText(found.text, 50)}</p>
+                                    <p>{truncateText(found.name, 50)}</p>
                                 </div>
                             </div>
                         ))}
@@ -240,7 +240,9 @@ const FoundPg = () => {
                         </div>
                     </div>
                     <div className="flex-1 overflow-y-auto p-4 space-y-4">
-                        {replies.map((reply, index) => (
+                        {replies.length > 0 ?
+                            (
+                            replies.map((reply, index) => (
                             <div className={authUser._id === reply.senderId ? "chat chat-start" : "chat chat-end"} key={index}>
                                 <div className="chat-image avatar">
                                     <div className="size-10 rounded-full border">
@@ -260,7 +262,10 @@ const FoundPg = () => {
                                     <p className='text-xl'>{reply.text || "No content available."}</p>
                                 </div>
                             </div>
-                        ))}
+                            ))
+                            ) :
+                            (<p>No reply found</p>)
+                    }
                     </div>
                     <ReplyInput msgId={selctedMsgId} place={currentPlace} />
                 </>

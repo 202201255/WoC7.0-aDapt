@@ -167,7 +167,7 @@ const addAnswer = async (req, res) => {
 	
 	
 
-	if (!text) return res.status(400).json({ message: "text is must" });
+	// if (!text) return res.status(400).json({ message: "text is must" });
 
 	try {
 		console.log("text", text);

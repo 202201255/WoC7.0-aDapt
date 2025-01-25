@@ -49,7 +49,6 @@ const LostPg = () => {
         if (it === "add" && inputValue.trim() !== "") {
             await addPlace({ place: inputValue });
         } else if (it === "remove" && inputValue.trim() !== "") {
-            console.log(inputValue)
             await removePlace({ place: inputValue });
         }
         setRender(false); // Close input field
@@ -120,13 +119,14 @@ const LostPg = () => {
             {what === "place" && (
                 <>
                     <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-7 xl:grid-cols-8 gap-4">
-                        {places.map((placeObj, index) => (
+                        {
+                            places.map((placeObj, index) => (
                             <div
                                 className="card outline outline-primary text-primary text-2xl justify-center items-center font-bold flex hover:bg-primary hover:text-black"
                                 key={index}
-                                onClick={() => handlePlaceClick(placeObj.place)}
+                                onClick={() => handlePlaceClick(placeObj.name)}
                             >
-                                <div className="card-body">{placeObj.place}</div>
+                                <div className="card-body">{placeObj.name}</div>
                             </div>
                         ))}
                     </div>
@@ -193,7 +193,7 @@ const LostPg = () => {
                             <div
                                 className="card outline outline-primary outline-2 shadow-2xl flex flex-col m-2 hover:bg-primary hover:text-black transition-colors"
                                 key={found._id}
-                                onClick={() => handleMsgClick(found._id, found.file, found.text)}
+                                onClick={() => handleMsgClick(found._id, found.file, found.name)}
                             >
                                 <figure>
                                     <img
@@ -202,7 +202,7 @@ const LostPg = () => {
                                     />
                                 </figure>
                                 <div className="card-body text-xl">
-                                    <p>{truncateText(found.text, 50)}</p>
+                                    <p>{truncateText(found.name, 50)}</p>
 
                                 </div>
                             </div>
@@ -240,7 +240,9 @@ const LostPg = () => {
                         </div>
                     </div>
                     <div className="flex-1 overflow-y-auto p-4 space-y-4">
-                        {replies.map((reply, index) => (
+                        {
+                            replies?.length>0? (
+                            replies.map((reply, index) => (
                             <div className={authUser._id === reply.senderId ? "chat chat-start" : "chat chat-end"} key={index}>
                                 <div className="chat-image avatar">
                                     <div className="size-10 rounded-full border">
@@ -260,7 +262,10 @@ const LostPg = () => {
                                     <p className='text-xl'>{reply.text || "No content available."}</p>
                                 </div>
                             </div>
-                        ))}
+                            ))
+                            ) :
+                                (<p>No reply found</p>)
+                    }
                     </div>
                     <ReplyInput msgId={selctedMsgId} place={currentPlace} />
                 </>
