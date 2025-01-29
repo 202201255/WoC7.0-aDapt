@@ -17,6 +17,7 @@ import QnAForm from "./components/QnAForm.jsx";
 import LnFForm from "./components/LnFForm.jsx";
 import EmailForm from "./components/EmailForm.jsx";
 import EmailRemoveForm from "./components/EmailRemoveForm.jsx";
+import PageNotFound from "./components/PageNotFound.jsx";
 import SharedlibForm from "./components/SharedlibForm.jsx";
 import { Toaster } from "react-hot-toast";
 const App = () => {
@@ -98,6 +99,7 @@ const App = () => {
 						path="/settings"
 						element={authUser ? <SettingsPage /> : <Navigate to="/" />}
 					/>
+					<Route exact path="*" element={<PageNotFound />} />
 				</Routes>
 				<Toaster />
 			</div>

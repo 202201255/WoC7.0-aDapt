@@ -82,7 +82,12 @@ const AnswerInput = ({ questionId, category }) => {
 		}
 		// answers;
 		// console.log("ji helo");
-		socket.emit("sendAnswer", { questionId, text, file });
+		socket.emit("sendAnswer", {
+			questionId,
+			text,
+			file,
+			senderId: authUser._id,
+		});
 		setQId(questionId);
 		// console.log("I'm called")
 		try {

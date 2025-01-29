@@ -161,11 +161,11 @@ export const useQnAStore = create((set, get) => ({
 			formData.append("senderId", answerData.senderId);
 			console.log("jj");
 
-			const { socket } = useAuthStore.getState();
-			socket.emit("newAnswer", {
-				questionId: answerData.questionId,
-				newAnswer: answerData,
-			});
+			// const { socket } = useAuthStore.getState();
+			// socket.emit("newAnswer", {
+			// 	questionId: answerData.questionId,
+			// 	newAnswer: answerData,
+			// });
 
 			
 			// console.log(formData);

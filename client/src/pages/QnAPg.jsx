@@ -48,7 +48,7 @@ const TypingUsers = ({ isUserTyping, setIsUserTyping }) => {
 				clearInterval(interval); // Stop when all users are processed
 				setCurrentUser(null);
 			}
-		}, 2000); // Switch to the next user every 0.5 seconds
+		}, 1500); // Switch to the next user every 0.5 seconds
 
 		return () => clearInterval(interval); // Clean up interval on unmount
 	}, [isUserTyping, setIsUserTyping]);
