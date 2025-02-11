@@ -3,8 +3,13 @@ import react from '@vitejs/plugin-react'
 
 // https://vite.dev/config/
 export default defineConfig({
-  plugins: [react()],
-   optimizeDeps: {
-    include: ["@tsparticles/react", "@tsparticles/engine"], // Add necessary dependencies
-  },
-})
+	plugins: [react()],
+	optimizeDeps: {
+		include: [
+			"@emotion/styled",
+			"@mui/material",
+			"@tsparticles/react",
+			"@tsparticles/engine",
+		], // Add necessary dependencies
+	},
+});

@@ -21,13 +21,11 @@ import PageNotFound from "./components/PageNotFound.jsx";
 import SharedlibForm from "./components/SharedlibForm.jsx";
 import { Toaster } from "react-hot-toast";
 const App = () => {
-	
-	const { theme }=useThemeStore();
+	const { theme } = useThemeStore();
 	const { authUser, checkAuth, isCheckingAuth } = useAuthStore();
 	const token = localStorage.getItem("token");
 	useEffect(() => {
 		checkAuth();
-		
 	}, []);
 
 	console.log("authUser", authUser);
@@ -99,7 +97,7 @@ const App = () => {
 						path="/settings"
 						element={authUser ? <SettingsPage /> : <Navigate to="/" />}
 					/>
-					<Route exact path="*" element={<PageNotFound />} />
+					<Route path="*" element={<PageNotFound />} />
 				</Routes>
 				<Toaster />
 			</div>
