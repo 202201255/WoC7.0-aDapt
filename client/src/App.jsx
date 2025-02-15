@@ -8,6 +8,8 @@ import { useAuthStore } from "./store/authStore.js";
 import { useThemeStore } from "./store/useThemeStore.js";
 import { Loader } from "lucide-react";
 import QnAPg from "./pages/QnAPg.jsx";
+import CoursePg from "./pages/CourseRoom/CoursePg.jsx";
+import CourseDetailsPg from "./pages/CourseRoom/CourseDetailsPg.jsx";
 import SharedlibPg from "./pages/SharedlibPg.jsx";
 import EmailPg from "./pages/EmailPg.jsx";
 import LostPg from "./pages/LostPg.jsx";
@@ -20,6 +22,7 @@ import EmailRemoveForm from "./components/EmailRemoveForm.jsx";
 import PageNotFound from "./components/PageNotFound.jsx";
 import SharedlibForm from "./components/SharedlibForm.jsx";
 import { Toaster } from "react-hot-toast";
+import AnnouncementPg from "./pages/CourseRoom/AnnouncementPg.jsx";
 const App = () => {
 	const { theme } = useThemeStore();
 	const { authUser, checkAuth, isCheckingAuth } = useAuthStore();
@@ -52,6 +55,18 @@ const App = () => {
 					<Route
 						path="/login"
 						element={!authUser ? <LoginPg /> : <Navigate to="/" />}
+					/>
+					<Route
+						path="/course"
+						element={authUser ? <CoursePg /> : <Navigate to="/" />}
+					/>
+					<Route
+						path="/course/:id"
+						element={authUser ? <CourseDetailsPg /> : <Navigate to="/" />}
+					/>
+					<Route
+						path="/course/courseName/:id"
+						element={authUser ? <AnnouncementPg /> : <Navigate to="/" />}
 					/>
 					<Route
 						path="/qna"

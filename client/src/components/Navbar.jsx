@@ -79,6 +79,14 @@ const Navbar = () => {
 							>
 								<li>
 									<Link
+										to="/course"
+										className="text-lg nav-item hover:text-blue-500"
+									>
+										Course-room
+									</Link>
+								</li>
+								<li>
+									<Link
 										to="/qna"
 										className="text-lg nav-item hover:text-blue-500"
 									>
@@ -123,7 +131,15 @@ const Navbar = () => {
 						</Link>
 					</div>
 					<div className="navbar-center hidden lg:flex">
-						<ul className="menu menu-horizontal px-1">
+					<ul className="menu menu-horizontal px-1">
+							<li>
+								<Link
+									to="/course"
+									className="text-lg hover:text-primary bg-neutral-focus hover:bg-neutral rounded-md"
+								>
+									Course-room
+								</Link>
+							</li>
 							<li>
 								<Link
 									to="/qna"
