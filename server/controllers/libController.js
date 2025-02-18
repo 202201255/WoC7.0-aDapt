@@ -180,8 +180,8 @@ const addFile = async (req, res) => {
 					text: name,
 					file: result ? result.secure_url : null,
         });
-        
-        await existingCourse.save();
+         
+        await existingCourse.save(); 
         return res.status(201).json({ newFile: existingCourse.files });
 
     }

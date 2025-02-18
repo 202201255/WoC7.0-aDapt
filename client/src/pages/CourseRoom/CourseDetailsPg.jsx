@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { Modal } from "@mui/material";
 import Publish from "./Publish"
@@ -14,16 +14,42 @@ import {
 	// Avatar,
 	Tooltip,
 } from "@mui/material";
+
+
+import { useAuthStore } from "../../store/authStore";
+import { useCourseRoomStore } from "../../store/courseRoomStore";
+
+
 const CourseDetails = () => {
+	const { authUser, socket, isAdmin } = useAuthStore();
+		const {
+			courses,
+			announcements,
+			courseSelected,
+			setCourseSelected,
+			getCourses,
+			addCourse,
+			getAnnouncement,
+			addAnnouncement,
+			setAnnouncementSelected,
+		} = useCourseRoomStore();
+	
 	const { id } = useParams();
 	 const navigate = useNavigate();
 	// const [isModalOpen, setIsModalOpen] = useState(false);
-	const [announcement, setAnnouncement] = useState("");
-	const [announcements, setAnnouncements] = useState([
-		{ id: 1, text: "Welcome to the course!" },
-		{ id: 2, text: "Don't forget to check the syllabus." },
-	]);
-
+	// const [announcement, setAnnouncement] = useState("");
+	// const [announcements, setAnnouncements] = useState([
+	// 	{ id: 1, text: "Welcome to the course!" },
+	// 	{ id: 2, text: "Don't forget to check the syllabus." },
+	// ]);
+    useEffect(() => {
+			console.log("useEffect");
+			const functionn= async () => {
+				await getAnnouncement(courseSelected);
+				console.log('jjjj')
+			};
+		functionn();
+		}, []);
 	const handlePost = () => {
 		if (announcement.trim()) {
 			setAnnouncements([
@@ -46,8 +72,8 @@ const CourseDetails = () => {
 		<div className="p-6 space-y-4">
 			{/* Course Header */}
 			<div className="bg-blue-500 text-white p-6 rounded-lg shadow-md">
-				<h1 className="text-2xl font-bold">Course {id}</h1>
-				<p className="text-lg">Professor Name</p>
+				<h1 className="text-2xl font-bold">{courseSelected.courseName}</h1>
+				<p className="text-lg">Professor: {courseSelected.instructor}</p>
 			</div>
 
 			{/* Announce Button */}
@@ -107,7 +133,7 @@ const CourseDetails = () => {
 					</Box>
 				</Modal>
 			</div>
-			
+
 			{/* Announcement Modal */}
 
 			{/* Announcements List */}
@@ -127,10 +153,14 @@ const CourseDetails = () => {
 							key={index}
 							// onClick={() => handleAnnouncementClick(announcement)}
 							// onClick={() => navigate(`/course/${course.code}`)}
-							onClick={() => navigate(`/course/courseName/${announcement.id}`)}
+							onClick={() => {
+								setAnnouncementSelected(announcement);
+								navigate(`/course/courseName/${announcement._id}`)
+							}
+							}
 						>
 							<div className="card-body">
-								{!announcement.text ? "Loading new name" : announcement.text}
+								{!announcement.title ? "Loading new name" : announcement.title}
 							</div>
 						</div>
 					))

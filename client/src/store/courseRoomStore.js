@@ -2,22 +2,25 @@ import { create } from "zustand";
 import { axiosInstance } from "../lib/axios.js";
 import toast from "react-hot-toast";
 
-export const useCourseStore = create((set, get) => ({
+export const useCourseRoomStore = create((set, get) => ({
 	courses: [],
 	announcements: [],
 	isLoading: false,
 	isCourses: false,
 
-	courseId: null,
+	courseSelected: null,
+	announcementSelected: null,
 	// setCatId: (value) => set({ catId: value }),
-	setCourseId: (value) => set({ courseId: value }),
+	setCourseSelected: (value) => set({ courseSelected: value }),
+	setAnnouncementSelected: (value) => set({ announcementSelected: value }),
 
 	// Fetch courses for a specific category
 	getCourses: async () => {
 		set({ isLoading: true });
 		try {
 			const res = await axiosInstance.get(`/courseRoom/courses`);
-			set({ courses: res.data.course });
+			console.log("this is res.data", res.data.courses);
+			set({ courses: res.data.courses });
 			console.log("this are", get().courses);
 			// set({ isCategories: false });
 			set({ isCourses: true });
@@ -52,7 +55,7 @@ export const useCourseStore = create((set, get) => ({
 	getAnnouncement: async (courseData) => {
 		console.log("front end :category", courseData);
 		set({ isLoading: true });
-		const courseId = courseData.id;
+		const courseId = courseData._id;
 		try {
 			const res = await axiosInstance.get(
 				`/courseRoom/courses/${courseId}/announcement`
@@ -71,18 +74,19 @@ export const useCourseStore = create((set, get) => ({
 	},
 
 	// Send a new question
-	addAnnouncement: async (course, announcementData) => {
+	addAnnouncement: async (courseData, announcementData) => {
 		// console.log("hello ji");
 		try {
-			// console.log("IT's a qdata");
-			// console.log(category);
-			// console.log(questionData);
-			// console.log(questionData.text)
-			// console.log(questionData.file)
-            const courseId = courseData.id;
+			console.log("courseData", courseData);
+			console.log("announcementData", announcementData);
+			const courseId = courseData._id;
+
 			const formData = new FormData();
-			formData.append("text", announcementData.text);
-			formData.append("file", announcementData.file);
+			formData.append("title", announcementData.title);
+			formData.append("description", announcementData.description);
+			formData.append("dueDate", announcementData.dueDate);
+			formData.append("category", announcementData.category);
+			formData.append("file",announcementData.file)
 			// formData.append;
 			const res = await axiosInstance.post(
 				`/courseRoom/courses/${courseId}/announcement`,
@@ -93,7 +97,7 @@ export const useCourseStore = create((set, get) => ({
 					},
 				}
 			);
-			// console.log("res for que", res.data);
+			console.log("res for ", res.data.newAnnouncement);
 			set((state) => ({
 				announcements: [...state.announcements, res.data.newAnnouncement],
 			}));

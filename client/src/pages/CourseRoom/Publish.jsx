@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect,useRef } from "react";
 import {
 	TextField,
 	Button,
@@ -16,14 +16,25 @@ import {
 	Close as CloseIcon,
 	Announcement as AnnouncementIcon,
 } from "@mui/icons-material";
+import {
+	MessageCircleQuestion,
+	Image,
+	X,
+	ClipboardList,
+	File,
+} from "lucide-react";
 // import { DatePicker } from "@mui/lab";
 // import useAPI from "../../hooks/api";
 import { CircularProgress } from "@mui/material";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 import { toast, ToastContainer } from "react-toastify";
+import imageCompression from "browser-image-compression";
 
 import "react-toastify/dist/ReactToastify.css";
+
+import { useAuthStore } from "../../store/authStore";
+import { useCourseRoomStore } from "../../store/courseRoomStore";
 
 const initialValues = {
 	title: "",
@@ -34,11 +45,15 @@ const initialValues = {
 	url: "",
 };
 
-function Publish({ addAnnouncement, handleClose }) {
+function Publish({  handleClose }) {
 	const [title, setTitle] = useState("");
 	const [content, setContent] = useState("");
 	const [category, setCategory] = useState("General");
 	const [attachedFiles, setAttachedFiles] = useState([]);
+
+	 const [file, setFile] = useState(null);
+		const [fileType, setFileType] = useState(""); // Track file type
+		const fileInputRef = useRef(null);
 
 	// const { POST } = useAPI();
 
@@ -52,6 +67,69 @@ function Publish({ addAnnouncement, handleClose }) {
 	const [formValues, setFormValues] = useState(initialValues);
 	const [formErrors, setFormErrors] = useState({});
 	const [isSubmit, setIsSubmit] = useState(false);
+
+	const { authUser, socket, isAdmin } = useAuthStore();
+	const {
+		courses,
+		announcements,
+		courseSelected,
+		setCourseSelected,
+		getCourses,
+		addCourse,
+		getAnnouncement,
+		addAnnouncement,
+	} = useCourseRoomStore();
+const handleFileChange = async (e) => {
+	const file = e.target.files[0];
+	if (!file) {
+		toast.error("Please select a file");
+		return;
+	}
+
+	const allowedTypes = ["image/", "application/pdf", "video/mp4"];
+	const isValidType = allowedTypes.some((type) => file.type.startsWith(type));
+
+	if (!isValidType) {
+		toast.error("Invalid file type. Only images, PDFs, and MP4s are allowed.");
+		return;
+	}
+
+	try {
+		let processedFile = file;
+		setFileType(file.type);
+
+		// Compress image if it's an image file
+		if (file.type.startsWith("image/")) {
+			const options = {
+				maxSizeMB: 0.5,
+				maxWidthOrHeight: 600,
+				useWebWorker: true,
+			};
+			processedFile = await imageCompression(file, options);
+		}
+
+		setFile(processedFile);
+	} catch (error) {
+		console.error("Error processing file:", error);
+		toast.error("Failed to process file");
+	}
+};
+
+const removeFile = () => {
+	setFile(null);
+	setFileType("");
+	if (fileInputRef.current) fileInputRef.current.value = "";
+};
+
+// Utility function to convert file to Base64
+const toBase64 = (file) =>
+	new Promise((resolve, reject) => {
+		const reader = new FileReader();
+		reader.readAsDataURL(file);
+		reader.onload = () => resolve(reader.result.split(",")[1]);
+		reader.onerror = (error) => reject(error);
+	});
+    
 
 	const handleDateChange_ = (e) => {
 		const selectedDate = new Date(e.target.value);
@@ -125,15 +203,26 @@ function Publish({ addAnnouncement, handleClose }) {
 			setIsSubmit(true);
 			setIsAdding(true);
 			try {
+				// const newFile = await toBase64(file);
+				const newFile = file;
+
+				const formData = {
+					name: name.trim(),
+					// file: file? await toBase64(file):null, // Convert file to Base64
+					file: file ? file : null,
+					fileType,
+				};
 				const announcement = {
-					link,
-					ID: cid, // Use course_id
+					// file: file? await toBase64(file):null, // Convert file to Base64
+					file: file ? file : null,
+					// Use course_id
 					title,
 					description: content,
-					due_time: date,
+					dueDate: date,
 					category, // Include category in the announcement object
 				};
-
+				
+				await addAnnouncement( courseSelected, announcement);
 				// const results = await POST(
 				// 	`/api/user/profdashboard/mycourses/${cid}/lab/assignment`, // Adjust the API endpoint for general announcements
 				// 	announcement
@@ -373,8 +462,8 @@ function Publish({ addAnnouncement, handleClose }) {
 				</div>
 			) : null}
 
-			<div>
-				<TextField
+			<div className="my-4">
+				{/* <TextField
 					label="Paste URL"
 					variant="outlined"
 					fullWidth
@@ -400,8 +489,38 @@ function Publish({ addAnnouncement, handleClose }) {
 					}}
 				>
 					Save Link
-				</Button>
-
+				</Button> */}
+				{
+			/* File Preview Section */
+		}
+		{
+			file && (
+				<div className="mb-3 flex items-center gap-2 px-4">
+					{fileType.startsWith("image/") ? (
+						<div className="relative">
+							<img
+								src={URL.createObjectURL(file)}
+								alt="Preview"
+								className="w-20 h-20 object-cover rounded-lg border border-zinc-700"
+							/>
+						</div>
+					) : (
+						<div className="relative">
+							<div className="w-20 h-20 flex items-center justify-center bg-gray-200 rounded-lg border border-zinc-700">
+								{fileType === "application/pdf" ? "PDF" : "Video"}
+							</div>
+						</div>
+					)}
+					<button
+						type="button"
+						onClick={removeFile}
+						className="absolute -top-1.5 -right-1.5 w-5 h-5 rounded-full bg-base-300 flex items-center justify-center"
+					>
+						<X className="size-3" />
+					</button>
+				</div>
+			)
+}
 				{/* Display Saved Link */}
 				{savedLink && (
 					<div style={{ marginTop: "10px" }}>
@@ -410,6 +529,35 @@ function Publish({ addAnnouncement, handleClose }) {
 					</div>
 				)}
 			</div>
+		{
+			/* File Upload Input */
+		}
+		<div className="flex items-center justify-center w-full px-4 pb-4">
+			<label
+				htmlFor="dropzone-file"
+				className="flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500"
+			>
+				<div className="flex flex-col items-center justify-center pt-5 pb-6">
+					<Image className="w-8 h-8 mb-4 text-gray-500 dark:text-gray-400" />
+					<p className="mb-2 text-sm text-gray-500 dark:text-gray-400">
+						<span className="font-semibold">Click to upload</span> or drag and
+						drop
+					</p>
+					<p className="text-xs text-gray-500 dark:text-gray-400">
+						Images, PDFs, or MP4s
+					</p>
+				</div>
+				<input
+					id="dropzone-file"
+					type="file"
+					className="hidden"
+					ref={fileInputRef}
+					onChange={handleFileChange}
+				/>
+			</label>
+		</div>
+
+
 
 			<Button
 				type="submit"
@@ -425,7 +573,7 @@ function Publish({ addAnnouncement, handleClose }) {
 						backgroundColor: "#1565c0",
 					},
 				}}
-				disabled={Object.keys(formErrors).length > 0} // Disable if there are errors
+				// disabled={Object.keys(formErrors).length > 0} // Disable if there are errors
 				onClick={handleSubmit}
 			>
 				Add Announcement{" "}

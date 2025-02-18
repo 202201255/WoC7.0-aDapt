@@ -7,6 +7,7 @@ const qnaRouter = require("./routes/qnaRouter");
 const libRouter = require("./routes/libRouter");
 const emailRouter = require("./routes/emailRouter");
 const lnfRouter = require("./routes/lnfRouter");
+const courseRoomRouter = require("./routes/courseRoomRouter");
 const app = express();
 
 const PORT = 5001;
@@ -64,6 +65,8 @@ app.use("/api/sharedlib", libRouter);
 app.use("/api/mail", emailRouter);
 
 app.use("/api/lnf", lnfRouter);
+
+app.use("/api/courseRoom", courseRoomRouter);
 
 io.on("connection", (socket) => {
 	console.log("User connected:", socket.id);

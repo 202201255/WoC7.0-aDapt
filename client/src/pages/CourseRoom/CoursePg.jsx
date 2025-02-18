@@ -1,18 +1,47 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+
+import { useAuthStore } from "../../store/authStore";
+import { useCourseRoomStore } from "../../store/courseRoomStore";
+
 function CoursePg() {
-    const navigate = useNavigate();
+	const navigate = useNavigate();
 	const [isPopupOpen, setIsPopupOpen] = useState(false);
 	const [joinCode, setJoinCode] = useState("");
-	const [joinedCourses, setJoinedCourses] = useState([
-		{ id: 1, code: "React Basics" },
-		{ id: 2, code: "Advanced Node.js" },
-		{ id: 3, code: "WebSockets & Real-time Apps" },
-	]);
+
+	// const [joinedCourses, setJoinedCourses] = useState([
+	// 	{ id: 1, code: "React Basics" },
+	// 	{ id: 2, code: "Advanced Node.js" },
+	// 	{ id: 3, code: "WebSockets & Real-time Apps" },
+	// ]);
+	const [joinedCourses, setJoinedCourses] = useState([]);
+
+	const { authUser, socket, isAdmin } = useAuthStore();
+	const {
+		courses,
+		announcements,
+		courseSelected,
+		setCourseSelected,
+		getCourses,
+		addCourse,
+		
+		getAnnouncement,
+		addAnnouncement,
+	} = useCourseRoomStore();
+
+	useEffect(() => {
+		const fetchcourse = async () => {
+			await getCourses();
+		};
+
+		fetchcourse();
+		setJoinedCourses(courses);
+		console.log("all courses: ", courses);
+	}, []);
 
 	const handleJoinClick = () => {
 		if (joinCode) {
-			setJoinedCourses([  
+			setJoinedCourses([
 				...joinedCourses,
 				{ id: Date.now(), title: `Course ${joinCode}` },
 			]);
@@ -28,6 +57,7 @@ function CoursePg() {
 				<div className="flex space-x-2">
 					<button
 						className="btn btn-primary justify-end"
+						disabled={!isAdmin}
 						// onClick={() => setIsPopupOpen(true)}
 					>
 						Create Class
@@ -40,8 +70,6 @@ function CoursePg() {
 					</button>
 				</div>
 			</div>
-
-			
 
 			{/* Join Class Popup */}
 			{isPopupOpen && (
@@ -74,11 +102,15 @@ function CoursePg() {
 			<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
 				{joinedCourses.map((course) => (
 					<div
-						key={course.id}
+						key={course._id}
 						className="card bg-base-200 p-4 shadow-md cursor-pointer"
-						onClick={() => navigate(`/course/${course.code}`)}
+						onClick={() => {
+							setCourseSelected(course);
+							navigate(`/course/${course.courseName}`);
+						}}
 					>
-						<h3 className="text-lg font-semibold">{course.code}</h3>
+						<h3 className="text-lg font-semibold">{course.courseName}</h3>
+						<h3 className="text-lg font-semibold">By {course.instructor}</h3>
 					</div>
 				))}
 			</div>

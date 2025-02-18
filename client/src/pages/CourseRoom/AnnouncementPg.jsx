@@ -14,7 +14,24 @@ import {
 } from "@mui/icons-material";
 import "daisyui/dist/full.css";
 
+import { useAuthStore } from "../../store/authStore";
+import { useCourseRoomStore } from "../../store/courseRoomStore";
+
 const AnnouncementPg = () => {
+	const { authUser, socket, isAdmin } = useAuthStore();
+	const {
+		courses,
+		announcements,
+		courseSelected,
+		setCourseSelected,
+		getCourses,
+		addCourse,
+		getAnnouncement,
+		addAnnouncement,
+		announcementSelected,
+		setAnnouncementSelected,
+	} = useCourseRoomStore();
+	
 	const [selectedFile, setSelectedFile] = useState(null);
 	const [isSubmitting, setIsSubmitting] = useState(false);
 	const [toast, setToast] = useState({
@@ -56,18 +73,19 @@ const AnnouncementPg = () => {
 		<Container maxWidth="md" className="bg-base-200 p-6 rounded-lg shadow-lg">
 			<Box className="p-6 bg-white rounded-lg shadow-lg">
 				{/* Lab Overview Section */}
-				<Typography variant="h4" className="text-primary mb-4">
-					Lab Details
+				<Typography variant="h4" className="text mb-4">
+					{announcementSelected.title}
 				</Typography>
 				<Typography variant="body1" className="mb-4">
-					This is a placeholder for lab details and description.
+					{announcementSelected.description}
 				</Typography>
 
 				{/* Due Date */}
 				<Box className="flex items-center mb-4">
 					<DateRangeIcon className="mr-2" />
 					<Typography variant="body2">
-						<strong>Due Date:</strong> 2024-12-15
+						<strong>Due Date:</strong> {announcementSelected.dueDate}?:
+						{announcementSelected.dueDate}:{" No due date"}
 					</Typography>
 				</Box>
 
@@ -79,12 +97,18 @@ const AnnouncementPg = () => {
 					<Typography variant="body1" className="font-semibold mb-2">
 						Lab PDF Preview
 					</Typography>
-					<iframe
-						src="https://example.com/lab.pdf"
-						width="100%"
-						height="400px"
-						className="rounded-lg border"
-					></iframe>
+					<img
+						src={
+							announcementSelected?.fileUrl?.[0] ||
+							"https://webdeasy.de/wp-content/uploads/2020/06/404-pages.jpg"
+						}
+						alt={announcementSelected?.title || "No preview available"}
+						onError={(e) => {
+							e.target.onerror = null; // Prevent infinite loop
+							e.target.src =
+								"https://webdeasy.de/wp-content/uploads/2020/06/404-pages.jpg";
+						}}
+					/>
 				</div>
 
 				<Divider className="my-4" />
@@ -98,7 +122,9 @@ const AnnouncementPg = () => {
 						<CloudUploadIcon className="mr-2" /> Upload File
 						<input type="file" hidden onChange={handleFileChange} />
 					</label>
-					{selectedFile && <Typography className="mt-2">{selectedFile.name}</Typography>}
+					{selectedFile && (
+						<Typography className="mt-2">{selectedFile.name}</Typography>
+					)}
 					<Button
 						variant="contained"
 						color="primary"
@@ -110,8 +136,16 @@ const AnnouncementPg = () => {
 					</Button>
 				</Box>
 
-				<Snackbar open={toast.open} autoHideDuration={3000} onClose={handleToastClose}>
-					<Alert onClose={handleToastClose} severity={toast.severity} className="w-full">
+				<Snackbar
+					open={toast.open}
+					autoHideDuration={3000}
+					onClose={handleToastClose}
+				>
+					<Alert
+						onClose={handleToastClose}
+						severity={toast.severity}
+						className="w-full"
+					>
 						{toast.message}
 					</Alert>
 				</Snackbar>
