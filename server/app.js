@@ -43,7 +43,7 @@ const io = new Server(server, {
 // Configure CORS
 app.use(
 	cors({
-		origin: "http://localhost:5173", // Replace with your frontend's origin
+		origin: "https://adapt-nhtr.onrender.com", // Replace with your frontend's origin
 		credentials: true, // Allow cookies and credentials
 		methods: ["GET", "POST", "PUT", "DELETE"], // Allowed HTTP methods
 		allowedHeaders: ["Content-Type", "Authorization"], // Allowed headers

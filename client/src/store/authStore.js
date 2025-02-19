@@ -153,7 +153,7 @@ export const useAuthStore = create((set, get) => ({
 		console.log(authUser);
 		if (!authUser || get().socket?.connected) return;
 
-		const socket = io("http://localhost:5001", {
+		const socket = io("https://woc7-0-adapt.onrender.com", {
 			query: {
 				userId: authUser._id,
 			},
