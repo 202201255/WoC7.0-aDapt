@@ -170,6 +170,7 @@ export const useSharedLibStore = create((set, get) => ({
 
 			fileData.append("file", file.file);
 			fileData.append("name", file.name);
+			fileData.append("fileType", file.fileType);
 
 			const res = await axiosInstance.post(
 				`/sharedlib/course_codes/${categoryId}/courses/${courseId}/files/add`,

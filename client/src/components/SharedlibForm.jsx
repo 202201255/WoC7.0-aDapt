@@ -78,8 +78,8 @@ const SharedlibForm = () => {
             
             const formData = {
                 name: name.trim(),
-                // file: file? await toBase64(file):null, // Convert file to Base64
-                file: file ? file : null,
+                file: file? await toBase64(file):null, // Convert file to Base64
+                // file: file ? file : null,
                 fileType,
             };
             console.log("jiiii", formData);

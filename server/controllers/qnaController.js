@@ -156,9 +156,15 @@ const getAnswer = async (req, res) => {
 };
 const addAnswer = async (req, res) => {
 	const { category } = req.params;
-	const { text: text, senderId: senderId, questionId: questionId } = req.body;
+	const {
+		text: text,
+		senderId: senderId,
+		questionId: questionId,
+		name,
+	} = req.body;
 	const filePath = req.file;
- 
+	// console.log("file", req.file);
+	// console.log("body",r)
 	// console.log("body",req.body);
 	// console.log("file", req.file);
 	// console.log("text :",text);
@@ -171,10 +177,12 @@ const addAnswer = async (req, res) => {
 
 	try {
 		console.log("text", text);
-		let result=null; 
+		let result = null; 
+		console.log(req.file);
 		if(req.file)
 		result= await cloudinary.v2.uploader.upload(req.file.path);
 		console.log("text", text);
+		
 		// const existingCategory = await Category.findOne({ name: category });
 		// if (!existingCategory) {
 		// 	return res.status(404).json({ message: "Category not found" });
@@ -189,7 +197,8 @@ console.log("ajd");
 				text, 
 				senderId,
 				file: result ? result.url : null,
-				questionId,
+			 questionId,
+				name
 		};
 		
 		existingQuestion.comments.push(newAnswer);

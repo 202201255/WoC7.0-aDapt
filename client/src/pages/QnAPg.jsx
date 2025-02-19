@@ -7,8 +7,11 @@ import AnswerInput from "../components/AnswerInput";
 import { useAuthStore } from "../store/authStore";
 
 import LOADING_GIF from "../assets/typing.gif";
-
+import Avatar from "@mui/material/Avatar";
+import { Tooltip } from "@mui/material";
+import { deepOrange, deepPurple } from "@mui/material/colors";
 const TypingUsers = ({ isUserTyping, setIsUserTyping }) => {
+	
 	const [currentUser, setCurrentUser] = useState(null);
 
 	useEffect(() => {
@@ -171,6 +174,7 @@ const QnAPg = () => {
 	};
 
 	useEffect(() => {
+		console.log("hih",answers);
 		const handleIsTyping = (data) => {
 			setIsUserTyping((prev) => ({
 				...prev,
@@ -229,7 +233,7 @@ const QnAPg = () => {
 					</div>
 
 					{/* Edit Dropdown */}
-					<div className="dropdown dropdown-top dropdown-end fixed right-4 bottom-4">
+					<div className="dropdown dropdown-top dropdown-end fixed right-2 bottom-4">
 						{!render ? (
 							<div
 								tabIndex={0}
@@ -368,10 +372,22 @@ const QnAPg = () => {
 								>
 									<div className="chat-image avatar">
 										<div className="size-10 rounded-full border">
-											<img
-												src={"https://via.placeholder.com/150"}
-												alt="Avatar"
-											/>
+											<Tooltip title={answer.name}>
+												<Avatar
+													sx={{
+														bgcolor: deepOrange[500],
+														// width: 48,
+														// height: 48,
+														// fontSize: "1.2rem",
+														// border: "2px solid white",
+														boxShadow: "0px 4px 10px rgba(0,0,0,0.2)",
+														transition: "transform 0.2s ease-in-out",
+														"&:hover": { transform: "scale(1.3)" },
+													}}
+												>
+													{String(answer.name)[0].toUpperCase()}
+												</Avatar>
+											</Tooltip>
 										</div>
 									</div>
 

@@ -21,6 +21,9 @@ const commentSchema = new Schema(
 			ref: "User", // Assuming you have a User model
 			required: true, // Ensure every comment has a sender
 		},
+		name: {
+			type: String,
+		},
 	},
 	{ timestamps: true }
 );

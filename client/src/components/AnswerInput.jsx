@@ -87,6 +87,7 @@ const AnswerInput = ({ questionId, category }) => {
 			text,
 			file,
 			senderId: authUser._id,
+			name:authUser.user.fullName,
 		});
 		setQId(questionId);
 		// console.log("I'm called")
@@ -95,6 +96,7 @@ const AnswerInput = ({ questionId, category }) => {
 				questionId,
 				text: text.trim(),
 				file: file ? file : null,
+				// file: file ? await toBase64(file) : null, // Convert file to Base64
 				senderId: authUser._id,
 				// file: file ? await toBase64(file) : null, // Convert file to Base64
 			};

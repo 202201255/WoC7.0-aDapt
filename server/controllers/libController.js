@@ -153,47 +153,46 @@ const getFiles = async (req, res) => {
         res.status(500).json({ message: "Server side error, Please try again " });
     }
 }
-
 const addFile = async (req, res) => {
-    const { categoryId, courseId } = req.params;
+	const { categoryId, courseId } = req.params;
+	const { file, name, fileType } = req.body;
 
-    const file = req.file;
-    const name = req.body.name;
+	// console.log("file:", file);
+	// console.log("fileType:", fileType);
 
-    console.log(categoryId, courseId, file,name);
+	if (!file) {
+		return res.status(400).json({ message: "No file provided" });
+	}
 
-    try {
-        let result=null; 
-        if(req.file)
-            result = await cloudinary.v2.uploader.upload(req.file.path, {
-							resource_type: "auto",
-						});
-        
-        
-        const existingCourse = await Course.findOne({
-            _id: courseId,
-        });
-        if(!existingCourse)
-            return res.status(404).json({ message: "Course not found" });
+	try {
+		// Upload Base64 file to Cloudinary
+		const uploadResponse = await cloudinary.uploader.upload(
+			`data:${fileType};base64,${file}`,
+			{ resource_type: "auto" }
+		);
 
-        existingCourse.files.push({
-					text: name,
-					file: result ? result.secure_url : null,
-        });
-         
-        await existingCourse.save(); 
-        return res.status(201).json({ newFile: existingCourse.files });
+		const fileUrl = uploadResponse.secure_url;
+		const public_id = uploadResponse.public_id;
 
-    }
-    catch (error) {
-        console.log("error", error);
-        res.status(500).json({ message: "Server side error, Please try again " });
-    }
-    finally {
-        await fs.unlinkSync(req.file.path);
-    }
+		// Find course
+		const existingCourse = await Course.findOne({ _id: courseId });
+		if (!existingCourse) {
+			return res.status(404).json({ message: "Course not found" });
+		}
 
-}
+		// Add file details to course
+		existingCourse.files.push({ text: name, file: fileUrl });
+		await existingCourse.save();
+
+		return res.status(201).json({ newFile: existingCourse.files });
+	} catch (error) {
+		console.error("File upload error:", error);
+		return res
+			.status(500)
+			.json({ message: "Server-side error, please try again" });
+	}
+};
+
 
 const removeFile = async (req, res) => {
     const { categoryId, courseId, fileId } = req.params;

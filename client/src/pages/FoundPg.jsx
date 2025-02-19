@@ -216,7 +216,7 @@ const FoundPg = () => {
                         ))}
                     </div>
                     {/* Edit Dropdown */}
-                    <div className="dropdown dropdown-top dropdown-end fixed right-4 bottom-4">
+                    <div className="dropdown dropdown-top dropdown-start left-50 top-40">
                         {!render ? (
                             <div
                                 tabIndex={0}

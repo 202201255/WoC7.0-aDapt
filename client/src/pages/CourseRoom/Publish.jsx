@@ -332,17 +332,17 @@ const toBase64 = (file) =>
 		// 	}
 		// }
 
-		const currentDate = new Date();
-		const selectedDate = new Date(date);
-		// const selectedTime = new Date(`${date}T${time}`);
+		// const currentDate = new Date();
+		// const selectedDate = new Date(date);
+		// // const selectedTime = new Date(`${date}T${time}`);
 
-		if (selectedDate < currentDate) {
-			errors.date = "Date is required! Enter valid date";
-		} else if (selectedDate < currentDate.setHours(0, 0, 0, 0)) {
-			errors.date = "Selected date cannot be in the past.";
-		} else if (!date) {
-			errors.date = "Date is required!";
-		}
+		// if (selectedDate < currentDate) {
+		// 	errors.date = "Date is required! Enter valid date";
+		// } else if (selectedDate < currentDate.setHours(0, 0, 0, 0)) {
+		// 	errors.date = "Selected date cannot be in the past.";
+		// } else if (!date) {
+		// 	errors.date = "Date is required!";
+		// }
 
 		// if (selectedTime < selectedTime) {
 		// 	errors.time = "Time is required!";

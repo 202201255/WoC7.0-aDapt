@@ -7,7 +7,9 @@ import { useCourseRoomStore } from "../../store/courseRoomStore";
 function CoursePg() {
 	const navigate = useNavigate();
 	const [isPopupOpen, setIsPopupOpen] = useState(false);
+	const [isPopupOpen2, setIsPopupOpen2] = useState(false);
 	const [joinCode, setJoinCode] = useState("");
+	const [newCourseName, setNewCourseName] = useState("");
 
 	// const [joinedCourses, setJoinedCourses] = useState([
 	// 	{ id: 1, code: "React Basics" },
@@ -39,7 +41,23 @@ function CoursePg() {
 		console.log("all courses: ", courses);
 	}, []);
 
-	const handleJoinClick = () => {
+	const handleCreateClick = () => {
+		if (newCourseName) {
+			const courseData = {
+				name: newCourseName,
+				instructor: authUser.user.fullName,
+				description: "This is a new course",
+			};
+			addCourse(courseData);
+			setJoinedCourses([
+				...joinedCourses,
+				{ id: Date.now(), title: `Course ${joinCode}` },
+			]);
+			setIsPopupOpen2(false);
+			setNewCourseName("");
+		}
+	};
+	const handleJoinClick  = () => {
 		if (joinCode) {
 			setJoinedCourses([
 				...joinedCourses,
@@ -58,7 +76,7 @@ function CoursePg() {
 					<button
 						className="btn btn-primary justify-end"
 						disabled={!isAdmin}
-						// onClick={() => setIsPopupOpen(true)}
+						onClick={() => setIsPopupOpen2(true)}
 					>
 						Create Class
 					</button>
@@ -71,6 +89,31 @@ function CoursePg() {
 				</div>
 			</div>
 
+			{isPopupOpen2 && (
+				<div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-opacity-50 backdrop-blur-sm z-10">
+					<div className="card bg-base-100 shadow-lg p-6 w-80">
+						<h2 className="text-lg font-semibold mb-3">Enter Class name</h2>
+						<input
+							type="text"
+							className="input input-bordered w-full mb-4"
+							placeholder="Enter name"
+							value={newCourseName}
+							onChange={(e) => setNewCourseName(e.target.value)}
+						/>
+						<div className="flex justify-end gap-2">
+							<button
+								className="btn btn-ghost"
+								onClick={() => setIsPopupOpen2(false)}
+							>
+								Cancel
+							</button>
+							<button className="btn btn-success" onClick={handleCreateClick}>
+								Create
+							</button>
+						</div>
+					</div>
+				</div>
+			)}
 			{/* Join Class Popup */}
 			{isPopupOpen && (
 				<div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-opacity-50 backdrop-blur-sm">
