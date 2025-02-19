@@ -18,8 +18,8 @@ const {
 } = require("./middlewares/authentication");
 
 mongoose
-	.connect("mongodb://localhost:27017/aDapt")
-	// .connect("mongodb+srv://Iconic:jayRathod@adapt-db.0odkr.mongodb.net/aDapt")
+	// .connect("mongodb://localhost:27017/aDapt")
+	.connect("mongodb+srv://Iconic:jayRathod@adapt-db.0odkr.mongodb.net/aDapt")
 	//
 	.then((e) => console.log("MongoDB connected"));
 
