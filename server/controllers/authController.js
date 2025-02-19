@@ -26,6 +26,8 @@ const signup = async (req, res) => {
 	// console.log("hibvjijbfi", req.body);
 	const { fullName, email, password } = req.body;
 
+	console.log(req.body);
+
 	// Validate the input fields
 	if (!fullName || !email || !password) {
 		return res.status(400).json({ message: "All fields are required!" });
@@ -41,8 +43,10 @@ const signup = async (req, res) => {
 
 	const newUser = await User.create({ fullName, email, password });
 	// console.log("hibvjijbfi");
+	console.log(newUser);
 
 	const token = createToken(newUser);
+	console.log(token);
 	res.cookie("token", token, { httpOnly: true, secure: false });
 	return res.status(201).json({
 		message: "User signed up successfully!",
