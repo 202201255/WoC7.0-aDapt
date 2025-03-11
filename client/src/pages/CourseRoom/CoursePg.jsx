@@ -26,20 +26,25 @@ function CoursePg() {
 		setCourseSelected,
 		getCourses,
 		addCourse,
-		
+
 		getAnnouncement,
 		addAnnouncement,
+		socketAddCourse,
 	} = useCourseRoomStore();
 
 	useEffect(() => {
 		const fetchcourse = async () => {
 			await getCourses();
 		};
-
+		const handleSocketAddCourse = (data) => {
+			socketAddCourse(data);
+		}
+		socket.on("class-created", handleSocketAddCourse);
 		fetchcourse();
 		setJoinedCourses(courses);
 		console.log("all courses: ", courses);
-	}, []);
+	}, [socket]);
+
 
 	const handleCreateClick = () => {
 		if (newCourseName) {
@@ -48,6 +53,8 @@ function CoursePg() {
 				instructor: authUser.user.fullName,
 				description: "This is a new course",
 			};
+
+			socket.emit("create-class", courseData);
 			addCourse(courseData);
 			setJoinedCourses([
 				...joinedCourses,
@@ -80,12 +87,12 @@ function CoursePg() {
 					>
 						Create Class
 					</button>
-					<button
+					{/* <button
 						className="btn btn-primary"
 						onClick={() => setIsPopupOpen(true)}
 					>
 						Join Class
-					</button>
+					</button> */}
 				</div>
 			</div>
 

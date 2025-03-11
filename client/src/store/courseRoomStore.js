@@ -15,6 +15,11 @@ export const useCourseRoomStore = create((set, get) => ({
 	setAnnouncementSelected: (value) => set({ announcementSelected: value }),
 
 	// Fetch courses for a specific category
+	socketAddCourse: async () => {
+		set((state) => ({
+			courses: [...state.courses, data],
+		}));
+	},
 	getCourses: async () => {
 		set({ isLoading: true });
 		try {

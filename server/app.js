@@ -18,8 +18,8 @@ const {
 } = require("./middlewares/authentication");
 
 mongoose
-	// .connect("mongodb://localhost:27017/aDapt")
-	.connect("mongodb+srv://Iconic:jayRathod@adapt-db.0odkr.mongodb.net/aDapt")
+	.connect("mongodb://localhost:27017/aDapt")
+	// .connect("mongodb+srv://Iconic:jayRathod@adapt-db.0odkr.mongodb.net/aDapt")
 	//
 	.then((e) => console.log("MongoDB connected"));
 
@@ -43,7 +43,7 @@ const io = new Server(server, {
 // Configure CORS
 app.use(
 	cors({
-		origin: "https://adapt-nhtr.onrender.com", // Replace with your frontend's origin
+		origin: "http://localhost:5173", // Replace with your frontend's origin
 		credentials: true, // Allow cookies and credentials
 		methods: ["GET", "POST", "PUT", "DELETE"], // Allowed HTTP methods
 		allowedHeaders: ["Content-Type", "Authorization"], // Allowed headers
@@ -102,6 +102,10 @@ io.on("connection", (socket) => {
 		console.log(`User ${socket.id} joined room ${room}`);
 	});
 
+	socket.on("create-class", (data) => {
+		io.emit("course-created", data);
+	}
+	)
 	socket.on("disconnect", () => {
 		console.log("User disconnected:", socket.id);
 	});
